@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Deadblock.Engine;
-using Logic;
+using Engine;
 
 namespace Deadblock
 {
@@ -10,7 +10,7 @@ namespace Deadblock
     {
         private GraphicsDeviceManager myGraphics;
         public SpriteBatch SpriteBatch { get; private set; }
-        public GameContents GameContents { get; private set; }
+        public ContentWorker GameContents { get; private set; }
 
         private World myWorld;
 
@@ -24,7 +24,7 @@ namespace Deadblock
 
         protected override void Initialize()
         {
-            GameContents = new GameContents(this);
+            GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
             myWorld = new World(this);
 
             base.Initialize();

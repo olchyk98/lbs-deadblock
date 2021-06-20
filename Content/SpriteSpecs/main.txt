@@ -1,0 +1,11 @@
+----------------------------
+ID: 1
+Name: env/main-grass
+Path: ./Content/Sprites/Environment/Ground/tile006.png
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
+ID: 2
+Name: env/green-tree
+Path: ./Content/Sprites/Environment/Entries/SmallTree.png
+DrawPositionMode: BOTTOM_TO_POINT
+----------------------------
