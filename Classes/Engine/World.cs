@@ -4,13 +4,19 @@ using Microsoft.Xna.Framework;
 using Deadblock.Generic;
 using Logic;
 using Tools;
+using Deadmind.Engine;
 
 namespace Deadblock.Engine
 {
     public class World : DeliveredGameSlot
     {
         private Dictionary<char, SpriteBlock> mySpriteMap;
-        private char[][] myMapSequence;
+        private char[][][] myMapSequence;
+
+        private static string[] MapSequenceLayerPaths = new string[] {
+            @"./Content/Levels/TheMain/ground.txt",
+            @"./Content/Levels/TheMain/interactable.txt"
+        };
 
         public World (GameProcess aGame) : base(aGame)
         {
@@ -49,14 +55,12 @@ namespace Deadblock.Engine
         private void RegisterTextures (GameProcess aGame)
         {
             mySpriteMap = new Dictionary<char, SpriteBlock>();
+            WorkerTexture[] envTextures = gameInstance.GameContents.GetTexturesByPrefix("env");
 
-            RegisterTexture(aGame, '1', "env/main-grass");
-            RegisterTexture(aGame, '2', "env/green-tree");
-            RegisterTexture(aGame, '3', "env/dark-tree");
-            RegisterTexture(aGame, '4', "env/regular-flower");
-            RegisterTexture(aGame, '5', "env/vertical-gate");
-            RegisterTexture(aGame, '6', "env/horizontal-gate");
-            RegisterTexture(aGame, '7', "env/stack-sticks");
+            foreach (var spec in envTextures)
+            {
+                mySpriteMap[spec.ID] = new SpriteBlock(gameInstance, spec.Name);
+            }
         }
 
         /// <summary>
@@ -65,8 +69,7 @@ namespace Deadblock.Engine
         /// </summary>
         private void LoadMapSequence ()
         {
-            // TODO: 3D - multilayers
-            myMapSequence = FileUtils.ReadAs2DSequence(@"./Content/Levels/TheMain.txt");
+            myMapSequence = FileUtils.ReadAs3DSequence(MapSequenceLayerPaths);
         }
 
         /// <summary>
@@ -79,11 +82,16 @@ namespace Deadblock.Engine
 
             //////////////////////////////
 
-            Action<int, int> renderPosition = (int x, int y) => {
-                var spriteId = myMapSequence[y][x];
+            Action<int, int, int> renderPosition = (int layerIndex, int x, int y) => {
+                char spriteId = myMapSequence[layerIndex][y][x];
+
+                // Void should be ignored
+                if(spriteId == '0') return;
+
+                // DEV should be notified about a potential bug
                 if(!mySpriteMap.ContainsKey(spriteId))
                 {
-                    throw new AggregateException($"Found unexpected sprite id in the level layer reference file. Position: {x}:{y}; Value: {spriteId}");
+                    throw new AggregateException($"Found unexpected sprite id in the level layer reference file. Position: {x}:{y}; Value: {spriteId}. Please contact DEV.");
                 }
 
                 var sprite = mySpriteMap[spriteId];
@@ -95,9 +103,10 @@ namespace Deadblock.Engine
 
             //////////////////////////////
 
-            for(var my = 0; my < myMapSequence.Length; ++my)
-                for (var mx = 0; mx < myMapSequence[0].Length; mx++)
-                    renderPosition(mx, my);
+            for(var ml = 0; ml < myMapSequence.Length; ++ml)
+                for(var my = 0; my < myMapSequence[0].Length; ++my)
+                    for (var mx = 0; mx < myMapSequence[0][0].Length; mx++)
+                        renderPosition(ml, mx, my);
         }
     }
 }
