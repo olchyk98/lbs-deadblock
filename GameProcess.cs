@@ -1,31 +1,38 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Deadblock.Engine;
+using Logic;
 
 namespace Deadblock
 {
-    public class Game1 : Game
+    public class GameProcess : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager myGraphics;
+        public SpriteBatch SpriteBatch { get; private set; }
+        public GameContents GameContents { get; private set; }
 
-        public Game1()
+        private World myWorld;
+
+        public GameProcess()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            myGraphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            GameContents = new GameContents(this);
+            myWorld = new World(this);
 
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
@@ -44,7 +51,9 @@ namespace Deadblock
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            SpriteBatch.Begin();
+            myWorld.RenderMap();
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }
