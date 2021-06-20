@@ -1,0 +1,18 @@
+version: 2.1
+
+jobs:
+  test-build:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1-focal
+    steps:
+      - checkout
+      - run:
+          working_directory: ~
+          name: Try Building
+          command: |
+            dotnet build Deadblock.csproj --configuration release
+
+workflows:
+  sample:
+    jobs:
+      - test-build
