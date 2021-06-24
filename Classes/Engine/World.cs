@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Deadblock.Generic;
 using Logic;
-using Tools;
 using Deadmind.Engine;
+using Deadblock.Tools;
+using Deadblock.Logic;
 
 namespace Deadblock.Engine
 {
@@ -12,6 +13,7 @@ namespace Deadblock.Engine
     {
         private Dictionary<char, SpriteBlock> mySpriteMap;
         private char[][][] myMapSequence;
+        private List<DrawableEntity> myEntities;
 
         private static string[] MapSequenceLayerPaths = new string[] {
             @"./Content/Levels/TheMain/ground.txt",
@@ -22,6 +24,7 @@ namespace Deadblock.Engine
         {
             RegisterTextures(aGame);
             LoadMapSequence();
+            InstantiateEntities();
         }
 
         /// <summary>
@@ -73,10 +76,30 @@ namespace Deadblock.Engine
         }
 
         /// <summary>
+        /// Spawns player at
+        /// the center of the map.
+        ///
+        /// Should be called
+        /// once the environment is loaded.
+        /// </summary>
+        private void InstantiateEntities ()
+        {
+            myEntities = new List<DrawableEntity>();
+
+            ////////////////////////
+
+            var player = new Player(gameInstance);
+
+            ////////////////////////
+
+            myEntities.Add(player);
+        }
+
+        /// <summary>
         /// Renders level on the screen
         /// using reference layer files.
         /// </summary>
-        public void RenderMap ()
+        private void RenderMap ()
         {
             var blockSize = GameGlobals.SCREEN_BLOCK_SIZE;
 
@@ -107,6 +130,51 @@ namespace Deadblock.Engine
                 for(var my = 0; my < myMapSequence[0].Length; ++my)
                     for (var mx = 0; mx < myMapSequence[0][0].Length; mx++)
                         renderPosition(ml, mx, my);
+        }
+
+        /// <summary>
+        /// Runs draw on
+        /// all available entities.
+        /// </summary>
+        private void RenderEntities ()
+        {
+            foreach(var entity in myEntities)
+            {
+                entity.Draw();
+            }
+        }
+
+        /// <summary>
+        /// Runs update on
+        /// all available entities.
+        /// </summary>
+        private void UpdateEntities ()
+        {
+            foreach(var entity in myEntities)
+            {
+                entity.Update();
+            }
+        }
+
+        /// <summary>
+        /// Renders entities and
+        /// constructed environment.
+        /// </summary>
+        public void Draw ()
+        {
+
+            RenderMap();
+            RenderEntities();
+        }
+
+        /// <summary>
+        /// Updates entities
+        /// and constructed environment.
+        /// </summary>
+        public void Update ()
+        {
+            // TODO: UpdateMap (spawn trees)
+            UpdateEntities();
         }
     }
 }

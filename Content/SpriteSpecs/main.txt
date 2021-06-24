@@ -9,3 +9,8 @@ Name: env/green-tree
 Path: ./Content/Sprites/Environment/Entries/SmallTree.png
 DrawPositionMode: BOTTOM_TO_POINT
 ----------------------------
+ID: 3
+Name: ent/player
+Path: ./Content/Sprites/Players/Main/Bottom.png
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
