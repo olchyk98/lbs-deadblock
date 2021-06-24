@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deadblock;
 using Deadblock.Generic;
+using Deadblock.Tools;
 using Deadmind.Engine;
 using Microsoft.Xna.Framework.Graphics;
-using Tools;
 
-namespace Engine
+namespace Deadblock.Engine
 {
     public class ContentWorker : DeliveredGameSlot, IContentWorker
     {

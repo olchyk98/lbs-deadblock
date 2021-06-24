@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Deadblock.Engine;
-using Engine;
 
 namespace Deadblock
 {
@@ -52,7 +51,7 @@ namespace Deadblock
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             SpriteBatch.Begin();
-            myWorld.RenderMap();
+            myWorld.Draw();
             SpriteBatch.End();
 
             base.Draw(gameTime);

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tools
+namespace Deadblock.Tools
 {
     public class AggregationUtils
     {

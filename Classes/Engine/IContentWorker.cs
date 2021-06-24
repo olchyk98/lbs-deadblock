@@ -1,6 +1,6 @@
 using Deadmind.Engine;
 
-namespace Engine
+namespace Deadblock.Engine
 {
     public interface IContentWorker
     {
