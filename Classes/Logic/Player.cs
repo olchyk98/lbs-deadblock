@@ -8,6 +8,9 @@ namespace Deadblock.Logic
         public Player (GameProcess aGame) : base(aGame, "ent/player", 100)
         {
             PlaceEntity();
+            ConnectInput();
+
+            SetSpeed(3);
         }
 
         /// <summary>
@@ -26,9 +29,33 @@ namespace Deadblock.Logic
             SetPosition(tempNextPosition);
         }
 
-        public override void Update()
+        /// <summary>
+        /// Assigns listeners
+        /// to the input handler to
+        /// give user the ability
+        /// to control the player.
+        /// </summary>
+        protected void ConnectInput ()
         {
+            gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) => {
+                MoveEntity(new Vector2(0, -1));
+            });
+
+            gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) => {
+                MoveEntity(new Vector2(1, 0));
+            });
+
+            gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) => {
+                MoveEntity(new Vector2(0, 1));
+            });
+
+            gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) => {
+                MoveEntity(new Vector2(-1, 0));
+            });
 
         }
+
+        public override void Update()
+        { }
     }
 }

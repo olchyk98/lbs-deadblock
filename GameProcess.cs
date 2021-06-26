@@ -10,6 +10,7 @@ namespace Deadblock
         private GraphicsDeviceManager myGraphics;
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentWorker GameContents { get; private set; }
+        public InputHandler InputHandler { get; private set; }
 
         private World myWorld;
 
@@ -23,6 +24,7 @@ namespace Deadblock
 
         protected override void Initialize()
         {
+            InputHandler = new InputHandler(this);
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
             myWorld = new World(this);
 
@@ -40,6 +42,9 @@ namespace Deadblock
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            InputHandler.Update();
+            myWorld.Update();
 
             // TODO: Add your update logic here
 
