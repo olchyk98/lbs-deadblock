@@ -8,6 +8,7 @@ namespace Deadblock.Engine
     public abstract class Entity : DeliveredGameSlot
     {
         public Vector2 Position { get; private set; }
+        public int Speed { get; private set; }
         public float Health { get; private set; }
         public float MaxHealth { get; }
         public bool isActive { get; private set; }
@@ -17,6 +18,7 @@ namespace Deadblock.Engine
             Health = (someHealth != default) ? someHealth : someMaxHealth;
             MaxHealth = someMaxHealth;
             Position = new Vector2(0, 0);
+            Speed = 1;
             isActive = true;
         }
 
@@ -75,7 +77,7 @@ namespace Deadblock.Engine
         /// </returns>
         public Vector2 MoveEntity (Vector2 aForce)
         {
-            var tempNextPosition = Position += aForce;
+            var tempNextPosition = Position += aForce * Speed;
 
             NativeUtils.ValidateIfOutOfScreen(gameInstance, tempNextPosition);
 
@@ -101,6 +103,22 @@ namespace Deadblock.Engine
 
             Position = aPosition;
             return aPosition;
+        }
+
+        /// <summary>
+        /// Sets speed for
+        /// the entity
+        /// </summary>
+        /// <param name="someSpeed">
+        /// Speed value.
+        /// </param>
+        /// <returns>
+        /// New speed of the entity.
+        /// </returns>
+        public int SetSpeed (int someSpeed)
+        {
+            Speed = someSpeed;
+            return Speed;
         }
     }
 }
