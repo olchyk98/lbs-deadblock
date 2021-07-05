@@ -14,3 +14,9 @@ Name: ent/player
 Path: ./Content/Sprites/Players/Main/Bottom.png
 DrawPositionMode: ORIGINAL_POINT
 ----------------------------
+ID: 4
+Name: env/tree-spawner
+Path: ./Content/Sprites/Environment/Ground/tile006.png
+DrawPositionMode: ORIGINAL_POINT
+ActiveInstanceName: Deadblock.Logic.TreeSpawner
+----------------------------

@@ -34,8 +34,6 @@ namespace Deadblock
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -45,8 +43,6 @@ namespace Deadblock
 
             InputHandler.Update();
             myWorld.Update();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
