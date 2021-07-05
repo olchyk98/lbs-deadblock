@@ -27,7 +27,7 @@ namespace Deadblock.Logic
         /// </summary>
         public void Draw ()
         {
-            Texture.Draw(Position);
+            Texture.Render(Position);
         }
 
         public virtual void Update()
