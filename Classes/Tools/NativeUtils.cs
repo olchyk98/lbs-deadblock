@@ -67,5 +67,27 @@ namespace Deadblock.Tools
 
             return true;
         }
+
+        public static float RandomizeValue<T> (T aMin, T aMax)
+        {
+            var randomInstance = new Random();
+
+            if(typeof(T) == typeof(int))
+            {
+                var tempMin = Convert.ToInt32(aMin);
+                var tempMax = Convert.ToInt32(aMax);
+                return (int) randomInstance.Next(tempMin, tempMax);
+            }
+
+            if(typeof(T) == typeof(float))
+            {
+                var tempMin = (float) Convert.ToDouble(aMin);
+                var tempMax = (float) Convert.ToDouble(aMax);
+                var tempSample = (float) randomInstance.NextDouble();
+                return (tempSample * tempMax) + tempMin;
+            }
+
+            return default;
+        }
     }
 }
