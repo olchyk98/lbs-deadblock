@@ -59,12 +59,19 @@ namespace Deadblock.Generic
 
             switch (myTextureSpec.DrawPositionMode)
             {
-                default:
-                case DrawPositionMode.CENTER_TO_POINT:
+                case DrawPositionMode.CENTER_TO_POINT: {
                     var relativeX = x + blockSize / 2 - w / 2;
                     var relativeY = y + blockSize / 2 - y / 2;
 
                     return new Vector2(relativeX, relativeY);
+               }
+                case DrawPositionMode.BOTTOM_TO_POINT: {
+                    var relativeX = x + blockSize / 2 - w / 2;
+                    var relativeY = y - h + blockSize;
+
+                    return new Vector2(relativeX, relativeY);
+                }
+                default:
                 case DrawPositionMode.ORIGINAL_POINT:
                     return aPosition;
             }
@@ -87,7 +94,7 @@ namespace Deadblock.Generic
         /// with the specified drawMode converter.
         /// DrawMode is usually specified via assets config.
         /// </param>
-        public void Draw (Vector2 aPosition, bool isRelative = true)
+        public void Render (Vector2 aPosition, bool isRelative = true)
         {
             var tempPosition = (isRelative) ? GetRelativePosition(aPosition) : aPosition;
             gameInstance.SpriteBatch.Draw(myTextureSpec.Texture, tempPosition, Color.White);

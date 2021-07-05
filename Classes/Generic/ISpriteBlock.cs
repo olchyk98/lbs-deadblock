@@ -9,6 +9,10 @@ namespace Deadblock.Generic
         /// on the specified position.
         /// Position is transformed with
         /// the specified drawMode before using.
+        ///
+        /// Warning! Instance of DynamicBlock
+        /// would call the Update() method
+        /// while drawing the texture.
         /// </summary>
         /// <param name="aPosition">
         /// Requested Position.
@@ -21,7 +25,7 @@ namespace Deadblock.Generic
         /// with the specified drawMode converter.
         /// DrawMode is usually specified via assets config.
         /// </param>
-        public void Draw(Vector2 aPosition, bool isRelative = true);
+        public void Render(Vector2 aPosition, bool isRelative = true);
 
         /// <summary>
         /// Constructs height and width
