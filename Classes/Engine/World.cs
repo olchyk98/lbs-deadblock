@@ -11,7 +11,7 @@ namespace Deadblock.Engine
 {
     public class World : DeliveredGameSlot
     {
-        private Dictionary<char, SpriteBlock> mySpriteMap;
+        private Dictionary<char, ISpriteBlock> mySpriteMap;
         private char[][][] myMapSequence;
         private List<DrawableEntity> myEntities;
 
@@ -43,9 +43,31 @@ namespace Deadblock.Engine
         /// that was already registered
         /// in targeted ContentWorker.
         /// </param>
-        private void RegisterTexture (GameProcess aGame, char anId, string aKey)
+        private void RegisterTexture (GameProcess aGame, WorkerTexture aSpec)
         {
-            mySpriteMap[anId] = new SpriteBlock(aGame, aKey);
+            ISpriteBlock tempInstance = default;
+
+            if(aSpec.ActiveInstanceName != null)
+            {
+                Type tempType = Type.GetType(aSpec.ActiveInstanceName);
+
+                if(tempType == null)
+                {
+                    throw new AggregateException($"An error in the schema file. Referenced an invalid active instance: { aSpec.ActiveInstanceName }. Contact DEV.");
+                }
+
+                tempInstance = (ISpriteBlock) Activator.CreateInstance(
+                    tempType,
+                    gameInstance,
+                    aSpec.Name
+                );
+            } else
+            {
+                tempInstance = new SpriteBlock(aGame, aSpec.Name);
+            }
+
+
+            mySpriteMap[aSpec.ID] = tempInstance;
         }
 
         /// <summary>
@@ -57,12 +79,12 @@ namespace Deadblock.Engine
         /// </param>
         private void RegisterTextures (GameProcess aGame)
         {
-            mySpriteMap = new Dictionary<char, SpriteBlock>();
+            mySpriteMap = new Dictionary<char, ISpriteBlock>();
             WorkerTexture[] envTextures = gameInstance.GameContents.GetTexturesByPrefix("env");
 
             foreach (var spec in envTextures)
             {
-                mySpriteMap[spec.ID] = new SpriteBlock(gameInstance, spec.Name);
+                RegisterTexture(gameInstance, spec);
             }
         }
 
@@ -121,7 +143,7 @@ namespace Deadblock.Engine
 
                 // Centered to the block
                 var position = new Vector2(blockSize * x, blockSize * y);
-                sprite.Draw(position);
+                sprite.Render(position);
             };
 
             //////////////////////////////
