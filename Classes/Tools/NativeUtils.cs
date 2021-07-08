@@ -15,7 +15,7 @@ namespace Deadblock.Tools
         /// Display Mode Vector2 that contains
         /// Height and Width of the targeted window.
         /// </returns>
-        public static Vector2 GetScreenResolution (GameProcess aGame)
+        public static Vector2 GetScreenResolution(GameProcess aGame)
         {
             var tempDisplayMode = aGame.GraphicsDevice.Viewport;
             return new Vector2(tempDisplayMode.Width, tempDisplayMode.Height);
@@ -31,14 +31,14 @@ namespace Deadblock.Tools
         /// Vector of the center
         /// of the targeted screen.
         /// </returns>
-        public static Vector2 GetScreenCenterPosition (GameProcess aGame)
+        public static Vector2 GetScreenCenterPosition(GameProcess aGame)
         {
             var tempScreenResolution = GetScreenResolution(aGame);
             return new Vector2(tempScreenResolution.X / 2, tempScreenResolution.Y / 2);
         }
 
         /// <summary>
-        /// Throws an error if specified
+        /// Returns true if specified
         /// point is out of the screen.
         /// </summary>
         /// <param name="aGame">
@@ -49,41 +49,37 @@ namespace Deadblock.Tools
         /// </param>
         /// <returns>
         /// True if the point is in bounds.
-        /// Throws an error if the point is not valid or of bounds.
+        /// False if out of the screen.
         /// </returns>
-        public static bool ValidateIfOutOfScreen (GameProcess aGame, Vector2 aPosition)
+        public static bool IsPointOnCanvas(GameProcess aGame, Vector2 aPosition)
         {
             var tempScreenSize = GetScreenResolution(aGame);
 
-            if(aPosition.X < 0 || aPosition.X > tempScreenSize.X)
-            {
-                throw new AggregateException("Position is out of horizontal boundaries. Contact DEV.");
-            }
+            if (aPosition.X < 0 || aPosition.X > tempScreenSize.X)
+                return false;
 
-            if(aPosition.Y < 0 || aPosition.Y > tempScreenSize.Y)
-            {
-                throw new AggregateException("Position is out of vertical boundaries. Contact DEV.");
-            }
+            if (aPosition.Y < 0 || aPosition.Y > tempScreenSize.Y)
+                return false;
 
             return true;
         }
 
-        public static float RandomizeValue<T> (T aMin, T aMax)
+        public static float RandomizeValue<T>(T aMin, T aMax)
         {
             var randomInstance = new Random();
 
-            if(typeof(T) == typeof(int))
+            if (typeof(T) == typeof(int))
             {
                 var tempMin = Convert.ToInt32(aMin);
                 var tempMax = Convert.ToInt32(aMax);
-                return (int) randomInstance.Next(tempMin, tempMax);
+                return (int)randomInstance.Next(tempMin, tempMax);
             }
 
-            if(typeof(T) == typeof(float))
+            if (typeof(T) == typeof(float))
             {
-                var tempMin = (float) Convert.ToDouble(aMin);
-                var tempMax = (float) Convert.ToDouble(aMax);
-                var tempSample = (float) randomInstance.NextDouble();
+                var tempMin = (float)Convert.ToDouble(aMin);
+                var tempMax = (float)Convert.ToDouble(aMax);
+                var tempSample = (float)randomInstance.NextDouble();
                 return (tempSample * tempMax) + tempMin;
             }
 

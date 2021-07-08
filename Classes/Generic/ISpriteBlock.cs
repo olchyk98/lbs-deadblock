@@ -4,6 +4,8 @@ namespace Deadblock.Generic
 {
     public interface ISpriteBlock
     {
+        bool HasCollider { get; }
+
         /// <summary>
         /// Draws object on the screen
         /// on the specified position.
