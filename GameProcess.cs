@@ -8,11 +8,11 @@ namespace Deadblock
     public class GameProcess : Game
     {
         private GraphicsDeviceManager myGraphics;
+
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentWorker GameContents { get; private set; }
         public InputHandler InputHandler { get; private set; }
-
-        private World myWorld;
+        public World World { get; private set; }
 
         public GameProcess()
         {
@@ -26,7 +26,7 @@ namespace Deadblock
         {
             InputHandler = new InputHandler(this);
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
-            myWorld = new World(this);
+            World = new World(this);
 
             base.Initialize();
         }
@@ -42,7 +42,7 @@ namespace Deadblock
                 Exit();
 
             InputHandler.Update();
-            myWorld.Update();
+            World.Update();
 
             base.Update(gameTime);
         }
@@ -52,7 +52,7 @@ namespace Deadblock
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             SpriteBatch.Begin();
-            myWorld.Draw();
+            World.Draw();
             SpriteBatch.End();
 
             base.Draw(gameTime);

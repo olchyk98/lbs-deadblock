@@ -25,7 +25,7 @@ namespace Deadblock.Engine
         /// <summary>
         /// Sets health to fullhealth.
         /// </summary>
-        private void SetFullHealth ()
+        private void SetFullHealth()
         {
             Health = MaxHealth;
         }
@@ -38,9 +38,9 @@ namespace Deadblock.Engine
         /// Number of health points
         /// that health will be reduced with.
         /// </param>
-        private void ApplyDamage (float someDamage)
+        private void ApplyDamage(float someDamage)
         {
-            if(someDamage < 0)
+            if (someDamage < 0)
             {
                 throw new AggregateException("Applied damage cannot be less than 0. Contact DEV.");
             }
@@ -56,9 +56,9 @@ namespace Deadblock.Engine
         /// Number of health points that are
         /// going to be added.
         /// </param>
-        private void RestoreHealth (float someHealth)
+        private void RestoreHealth(float someHealth)
         {
-            if(someHealth < 0)
+            if (someHealth < 0)
             {
                 throw new AggregateException("Cannot add number of health points if the value is less than 0. Contact DEV.");
             }
@@ -75,12 +75,23 @@ namespace Deadblock.Engine
         /// <returns>
         /// New Position of the entity.
         /// </returns>
-        public Vector2 MoveEntity (Vector2 aForce)
+        public Vector2 MoveEntity(Vector2 aForce)
         {
-            var tempNextPosition = Position += aForce * Speed;
+            var tempNextPosition = Position + aForce * Speed;
 
-            NativeUtils.ValidateIfOutOfScreen(gameInstance, tempNextPosition);
+            //////////////////
 
+            var tempIsOnScreen = NativeUtils.IsPointOnCanvas(gameInstance, tempNextPosition);
+            var tempIsBlocked = EngineUtils.IsTouchingCollider(gameInstance, tempNextPosition);
+
+            //////////////////
+
+            if (!tempIsOnScreen || tempIsBlocked)
+                return Position;
+
+            //////////////////
+
+            SetPosition(tempNextPosition);
             return tempNextPosition;
         }
 
@@ -97,9 +108,14 @@ namespace Deadblock.Engine
         /// <returns>
         /// Specified Position.
         /// </returns>
-        public Vector2 SetPosition (Vector2 aPosition)
+        public Vector2 SetPosition(Vector2 aPosition)
         {
-            NativeUtils.ValidateIfOutOfScreen(gameInstance, aPosition);
+            var isOfScreen = NativeUtils.IsPointOnCanvas(gameInstance, aPosition);
+
+            if (!isOfScreen)
+            {
+                throw new AggregateException("The specified position is out of the screen. Contact DEV.");
+            }
 
             Position = aPosition;
             return aPosition;
@@ -115,7 +131,7 @@ namespace Deadblock.Engine
         /// <returns>
         /// New speed of the entity.
         /// </returns>
-        public int SetSpeed (int someSpeed)
+        public int SetSpeed(int someSpeed)
         {
             Speed = someSpeed;
             return Speed;

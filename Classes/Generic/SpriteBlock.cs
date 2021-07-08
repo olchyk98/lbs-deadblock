@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Logic;
 using Deadmind.Engine;
-using System;
 
 namespace Deadblock.Generic
 {
@@ -16,6 +15,7 @@ namespace Deadblock.Generic
     public class SpriteBlock : DeliveredGameSlot, ISpriteBlock
     {
         private WorkerTexture myTextureSpec;
+        public bool HasCollider { get; } = false;
 
         public SpriteBlock (GameProcess aGame, string aTextureKey) : base(aGame)
         {

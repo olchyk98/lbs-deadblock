@@ -10,6 +10,7 @@ namespace Deadblock.Logic
         // This is kind of solution is designed
         // to bring more freedom for extending and supporting this class.
         public SpriteBlock MainSprite { get; private set; }
+        public bool HasCollider { get; } = true;
 
         public DynamicBlock(GameProcess aGame, string aTextureKey) : base(aGame)
         {

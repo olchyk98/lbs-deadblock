@@ -198,5 +198,60 @@ namespace Deadblock.Engine
             // TODO: UpdateMap (spawn trees)
             UpdateEntities();
         }
+
+        /// <summary>
+        /// Going through internal storages
+        /// and collects all active blocks
+        /// (for example, SpriteBlocks and DynamicBlocks) that
+        /// correspond to the targeted position.
+        /// </summary>
+        /// <param name="aPosition">
+        /// The targeted position,
+        /// </param>
+        /// <returns>
+        /// Array of blocks.
+        ///
+        /// An empty array,
+        /// if the point is of the bounds.
+        /// </returns>
+        public ISpriteBlock[] GetBlocksOnPosition (Vector2 aPosition)
+        {
+            var tempBlockSize = GameGlobals.SCREEN_BLOCK_SIZE;
+            var tempLayersCount = myMapSequence.Length;
+            var tempBlocks = new List<ISpriteBlock>();
+
+            var tempMatrixX = (int) Math.Floor(aPosition.X / tempBlockSize);
+            var tempMatrixY = (int) Math.Floor(aPosition.Y / tempBlockSize) + 1;
+
+            Console.WriteLine($"{tempMatrixY}:{tempMatrixX}");
+
+            //////////////////////////
+
+            var isOutBounds = (
+                tempMatrixY < 0 || tempMatrixY > myMapSequence[0].Length - 1
+                || tempMatrixX < 0 || tempMatrixX > myMapSequence[0][0].Length - 1
+            );
+
+            Console.WriteLine("passes");
+            if(isOutBounds) return new ISpriteBlock[] {};
+
+            //////////////////////////
+
+            foreach(char[][] layerMatrix in myMapSequence)
+            {
+                var targetChar = layerMatrix[tempMatrixY][tempMatrixX];
+
+                // Air should be ignored.
+                if(targetChar == '0') continue;
+
+                var targetBlock = mySpriteMap[targetChar];
+                tempBlocks.Add(targetBlock);
+            }
+
+            //////////////////////////
+
+            Console.WriteLine(tempBlocks.Count);
+            return tempBlocks.ToArray();
+        }
     }
 }
