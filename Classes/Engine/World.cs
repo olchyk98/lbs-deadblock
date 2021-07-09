@@ -20,7 +20,7 @@ namespace Deadblock.Engine
             @"./Content/Levels/TheMain/interactable.txt"
         };
 
-        public World (GameProcess aGame) : base(aGame)
+        public World(GameProcess aGame) : base(aGame)
         {
             RegisterTextures(aGame);
             LoadMapSequence();
@@ -43,25 +43,26 @@ namespace Deadblock.Engine
         /// that was already registered
         /// in targeted ContentWorker.
         /// </param>
-        private void RegisterTexture (GameProcess aGame, WorkerTexture aSpec)
+        private void RegisterTexture(GameProcess aGame, WorkerTexture aSpec)
         {
             ISpriteBlock tempInstance = default;
 
-            if(aSpec.ActiveInstanceName != null)
+            if (aSpec.ActiveInstanceName != null)
             {
                 Type tempType = Type.GetType(aSpec.ActiveInstanceName);
 
-                if(tempType == null)
+                if (tempType == null)
                 {
                     throw new AggregateException($"An error in the schema file. Referenced an invalid active instance: { aSpec.ActiveInstanceName }. Contact DEV.");
                 }
 
-                tempInstance = (ISpriteBlock) Activator.CreateInstance(
+                tempInstance = (ISpriteBlock)Activator.CreateInstance(
                     tempType,
                     gameInstance,
                     aSpec.Name
                 );
-            } else
+            }
+            else
             {
                 tempInstance = new SpriteBlock(aGame, aSpec.Name);
             }
@@ -77,7 +78,7 @@ namespace Deadblock.Engine
         /// <param name="aGame">
         /// Targeted game process.
         /// </param>
-        private void RegisterTextures (GameProcess aGame)
+        private void RegisterTextures(GameProcess aGame)
         {
             mySpriteMap = new Dictionary<char, ISpriteBlock>();
             WorkerTexture[] envTextures = gameInstance.GameContents.GetTexturesByPrefix("env");
@@ -92,7 +93,7 @@ namespace Deadblock.Engine
         /// Loads map sequence from specified
         /// file.
         /// </summary>
-        private void LoadMapSequence ()
+        private void LoadMapSequence()
         {
             myMapSequence = FileUtils.ReadAs3DSequence(MapSequenceLayerPaths);
         }
@@ -104,7 +105,7 @@ namespace Deadblock.Engine
         /// Should be called
         /// once the environment is loaded.
         /// </summary>
-        private void InstantiateEntities ()
+        private void InstantiateEntities()
         {
             myEntities = new List<DrawableEntity>();
 
@@ -121,20 +122,21 @@ namespace Deadblock.Engine
         /// Renders level on the screen
         /// using reference layer files.
         /// </summary>
-        private void RenderMap ()
+        private void RenderMap()
         {
             var blockSize = GameGlobals.SCREEN_BLOCK_SIZE;
 
             //////////////////////////////
 
-            Action<int, int, int> renderPosition = (int layerIndex, int x, int y) => {
+            Action<int, int, int> renderPosition = (int layerIndex, int x, int y) =>
+            {
                 char spriteId = myMapSequence[layerIndex][y][x];
 
                 // Void should be ignored
-                if(spriteId == '0') return;
+                if (spriteId == '0') return;
 
                 // DEV should be notified about a potential bug
-                if(!mySpriteMap.ContainsKey(spriteId))
+                if (!mySpriteMap.ContainsKey(spriteId))
                 {
                     throw new AggregateException($"Found unexpected sprite id in the level layer reference file. Position: {x}:{y}; Value: {spriteId}. Please contact DEV.");
                 }
@@ -148,8 +150,8 @@ namespace Deadblock.Engine
 
             //////////////////////////////
 
-            for(var ml = 0; ml < myMapSequence.Length; ++ml)
-                for(var my = 0; my < myMapSequence[0].Length; ++my)
+            for (var ml = 0; ml < myMapSequence.Length; ++ml)
+                for (var my = 0; my < myMapSequence[0].Length; ++my)
                     for (var mx = 0; mx < myMapSequence[0][0].Length; mx++)
                         renderPosition(ml, mx, my);
         }
@@ -158,9 +160,9 @@ namespace Deadblock.Engine
         /// Runs draw on
         /// all available entities.
         /// </summary>
-        private void RenderEntities ()
+        private void RenderEntities()
         {
-            foreach(var entity in myEntities)
+            foreach (var entity in myEntities)
             {
                 entity.Draw();
             }
@@ -170,9 +172,9 @@ namespace Deadblock.Engine
         /// Runs update on
         /// all available entities.
         /// </summary>
-        private void UpdateEntities ()
+        private void UpdateEntities()
         {
-            foreach(var entity in myEntities)
+            foreach (var entity in myEntities)
             {
                 entity.Update();
             }
@@ -182,7 +184,7 @@ namespace Deadblock.Engine
         /// Renders entities and
         /// constructed environment.
         /// </summary>
-        public void Draw ()
+        public void Draw()
         {
 
             RenderMap();
@@ -193,7 +195,7 @@ namespace Deadblock.Engine
         /// Updates entities
         /// and constructed environment.
         /// </summary>
-        public void Update ()
+        public void Update()
         {
             // TODO: UpdateMap (spawn trees)
             UpdateEntities();
@@ -214,14 +216,14 @@ namespace Deadblock.Engine
         /// An empty array,
         /// if the point is of the bounds.
         /// </returns>
-        public ISpriteBlock[] GetBlocksOnPosition (Vector2 aPosition)
+        public ISpriteBlock[] GetBlocksOnPosition(Vector2 aPosition)
         {
             var tempBlockSize = GameGlobals.SCREEN_BLOCK_SIZE;
             var tempLayersCount = myMapSequence.Length;
             var tempBlocks = new List<ISpriteBlock>();
 
-            var tempMatrixX = (int) Math.Floor(aPosition.X / tempBlockSize);
-            var tempMatrixY = (int) Math.Floor(aPosition.Y / tempBlockSize) + 1;
+            var tempMatrixX = (int)Math.Floor(aPosition.X / tempBlockSize);
+            var tempMatrixY = (int)Math.Floor(aPosition.Y / tempBlockSize) + 1;
 
             Console.WriteLine($"{tempMatrixY}:{tempMatrixX}");
 
@@ -233,16 +235,16 @@ namespace Deadblock.Engine
             );
 
             Console.WriteLine("passes");
-            if(isOutBounds) return new ISpriteBlock[] {};
+            if (isOutBounds) return new ISpriteBlock[] { };
 
             //////////////////////////
 
-            foreach(char[][] layerMatrix in myMapSequence)
+            foreach (char[][] layerMatrix in myMapSequence)
             {
                 var targetChar = layerMatrix[tempMatrixY][tempMatrixX];
 
                 // Air should be ignored.
-                if(targetChar == '0') continue;
+                if (targetChar == '0') continue;
 
                 var targetBlock = mySpriteMap[targetChar];
                 tempBlocks.Add(targetBlock);

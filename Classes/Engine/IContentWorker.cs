@@ -14,7 +14,7 @@ namespace Deadblock.Engine
         /// Specification instance of the texture
         /// with included Texture2D object.
         /// </returns>
-        public WorkerTexture GetTexture (string aSourceName);
+        public WorkerTexture GetTexture(string aSourceName);
 
         /// <summary>
         /// Returns all textures with specified prefix.

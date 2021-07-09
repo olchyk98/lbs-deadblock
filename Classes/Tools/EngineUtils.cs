@@ -22,13 +22,13 @@ namespace Deadblock.Tools
         /// if there's a collider at
         /// the specified position.
         /// </returns>
-        public static bool IsTouchingCollider (GameProcess aGame, Vector2 aPosition)
+        public static bool IsTouchingCollider(GameProcess aGame, Vector2 aPosition)
         {
             var tempBlocks = aGame.World.GetBlocksOnPosition(aPosition);
 
-            foreach(ISpriteBlock block in tempBlocks)
+            foreach (ISpriteBlock block in tempBlocks)
             {
-                if(block.HasCollider) return true;
+                if (block.HasCollider) return true;
             }
 
             return false;

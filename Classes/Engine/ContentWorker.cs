@@ -12,7 +12,7 @@ namespace Deadblock.Engine
     {
         private Dictionary<string, WorkerTexture> mySources;
 
-        public ContentWorker (GameProcess aGame, string aConfigsPath) : base(aGame)
+        public ContentWorker(GameProcess aGame, string aConfigsPath) : base(aGame)
         {
             LoadSources(aConfigsPath);
         }
@@ -24,7 +24,7 @@ namespace Deadblock.Engine
         /// <param name="aConfigsPath">
         /// Targeted file.
         /// </param>
-        private void LoadSources (string aConfigsPath)
+        private void LoadSources(string aConfigsPath)
         {
             List<Dictionary<string, string>> tempConfigs = FileUtils.ReadAsConfigBlocks(aConfigsPath).ToList();
             var tempSources = new Dictionary<string, WorkerTexture>();
@@ -40,9 +40,9 @@ namespace Deadblock.Engine
             mySources = tempSources;
         }
 
-        public WorkerTexture GetTexture (string aSourceName)
+        public WorkerTexture GetTexture(string aSourceName)
         {
-            if(!mySources.ContainsKey(aSourceName))
+            if (!mySources.ContainsKey(aSourceName))
             {
                 throw new ArgumentException($"Provided invalid source name for the content worker. Ensure that source with name {aSourceName} was provided to the storage.");
             }
@@ -59,7 +59,7 @@ namespace Deadblock.Engine
 
             foreach (KeyValuePair<string, WorkerTexture> pair in mySources)
             {
-                if(!pair.Key.StartsWith(prefixQuery)) continue;
+                if (!pair.Key.StartsWith(prefixQuery)) continue;
                 tempFoundPrefixes.Add(pair.Value);
             }
 

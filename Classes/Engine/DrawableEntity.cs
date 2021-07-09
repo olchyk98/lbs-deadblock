@@ -8,7 +8,7 @@ namespace Deadblock.Logic
     {
         public SpriteBlock Texture { get; private set; }
 
-        public DrawableEntity (GameProcess aGame, string aTextureName, float someHealth) : base(aGame, someHealth)
+        public DrawableEntity(GameProcess aGame, string aTextureName, float someHealth) : base(aGame, someHealth)
         {
             LoadTexture(aTextureName);
         }
@@ -16,7 +16,7 @@ namespace Deadblock.Logic
         /// <summary>
         /// Loads texture for the entity.
         /// </summary>
-        private void LoadTexture (string aTextureName)
+        private void LoadTexture(string aTextureName)
         {
             Texture = new SpriteBlock(gameInstance, aTextureName);
         }
@@ -25,12 +25,12 @@ namespace Deadblock.Logic
         /// Draws object on the screen
         /// on its position.
         /// </summary>
-        public void Draw ()
+        public void Draw()
         {
             Texture.Render(Position);
         }
 
         public virtual void Update()
-        {  }
+        { }
     }
 }

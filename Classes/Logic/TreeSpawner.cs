@@ -37,7 +37,7 @@ namespace Deadblock.Logic
                 mySpawnQuota -= .1f;
             }
 
-            if(mySpawnQuota <= 0 && !myHasPlant)
+            if (mySpawnQuota <= 0 && !myHasPlant)
             {
                 myHasPlant = true;
             }
