@@ -5,7 +5,7 @@ namespace Deadblock.Logic
 {
     public class Player : DrawableEntity
     {
-        public Player (GameProcess aGame) : base(aGame, "ent/player", 100)
+        public Player(GameProcess aGame) : base(aGame, "ent/player", 100)
         {
             PlaceEntity();
             ConnectInput();
@@ -17,7 +17,7 @@ namespace Deadblock.Logic
         /// Places player on
         /// the default position in the world.
         /// </summary>
-        protected void PlaceEntity ()
+        protected void PlaceEntity()
         {
             var tempScreenSize = NativeUtils.GetScreenCenterPosition(gameInstance);
             var tempDimensions = Texture.GetDimensions();
@@ -35,21 +35,25 @@ namespace Deadblock.Logic
         /// give user the ability
         /// to control the player.
         /// </summary>
-        protected void ConnectInput ()
+        protected void ConnectInput()
         {
-            gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) => {
+            gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) =>
+            {
                 MoveEntity(new Vector2(0, -1));
             });
 
-            gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) => {
+            gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) =>
+            {
                 MoveEntity(new Vector2(1, 0));
             });
 
-            gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) => {
+            gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) =>
+            {
                 MoveEntity(new Vector2(0, 1));
             });
 
-            gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) => {
+            gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) =>
+            {
                 MoveEntity(new Vector2(-1, 0));
             });
 

@@ -7,7 +7,7 @@ namespace Deadblock.Generic
     {
         private List<Action<T>> myListeners;
 
-        public UniversalEvent ()
+        public UniversalEvent()
         {
             myListeners = new List<Action<T>>();
         }

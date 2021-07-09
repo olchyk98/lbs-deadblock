@@ -17,7 +17,8 @@ namespace Deadblock.Logic
             MainSprite = new SpriteBlock(aGame, aTextureKey);
         }
 
-        virtual public void Render(Vector2 aPosition, bool isRelative = true) {
+        virtual public void Render(Vector2 aPosition, bool isRelative = true)
+        {
             MainSprite.Render(aPosition, isRelative);
             Update();
         }

@@ -4,7 +4,7 @@ namespace Deadblock.Generic
     {
         internal GameProcess gameInstance;
 
-        public DeliveredGameSlot (GameProcess aGame)
+        public DeliveredGameSlot(GameProcess aGame)
         {
             gameInstance = aGame;
         }

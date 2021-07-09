@@ -12,7 +12,7 @@ namespace Deadblock.Engine
         public UniversalEvent<bool> OnMoveLeft { get; }
         public UniversalEvent<bool> OnMoveDown { get; }
 
-        public InputHandler (GameProcess aGame) : base(aGame)
+        public InputHandler(GameProcess aGame) : base(aGame)
         {
             OnMoveDown = new UniversalEvent<bool>();
             OnMoveUp = new UniversalEvent<bool>();
@@ -26,7 +26,7 @@ namespace Deadblock.Engine
         /// Should be called on each frame.
         /// Processes the key actions on tick.
         /// </summary>
-        public void Update ()
+        public void Update()
         {
             KeyboardState state = Keyboard.GetState();
 
@@ -37,22 +37,22 @@ namespace Deadblock.Engine
 
             //////////////////
 
-            if(state.IsKeyDown(Keys.S))
+            if (state.IsKeyDown(Keys.S))
             {
                 OnMoveDown.Invoke(true);
             }
 
-            if(state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown(Keys.D))
             {
                 OnMoveRight.Invoke(true);
             }
 
-            if(state.IsKeyDown(Keys.W))
+            if (state.IsKeyDown(Keys.W))
             {
                 OnMoveUp.Invoke(true);
             }
 
-            if(state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.A))
             {
                 OnMoveLeft.Invoke(true);
             }

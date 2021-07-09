@@ -20,9 +20,9 @@ namespace Deadblock.Tools
         /// Converted value, represented
         /// as universal object type.
         /// </returns>
-        public static object ImpersonateTypeForValue (Type aType, string aValue)
+        public static object ImpersonateTypeForValue(Type aType, string aValue)
         {
-            if(aType.IsEnum)
+            if (aType.IsEnum)
                 return Enum.Parse(aType, aValue);
 
             // Simple Generic Type
@@ -44,16 +44,16 @@ namespace Deadblock.Tools
         /// Instance of the created type with
         /// all pushed attributes from the passed dictionary.
         /// </returns>
-        public static T CreateInstanceFromDictionary<T> (Dictionary<string, string> aDictionary)
+        public static T CreateInstanceFromDictionary<T>(Dictionary<string, string> aDictionary)
         {
-            var immediateInstance = (T) Activator.CreateInstance(typeof(T));
+            var immediateInstance = (T)Activator.CreateInstance(typeof(T));
 
-            foreach(KeyValuePair<string, string> pair in aDictionary)
+            foreach (KeyValuePair<string, string> pair in aDictionary)
             {
                 var textureType = immediateInstance.GetType();
                 var textureProp = textureType.GetProperty(pair.Key);
 
-                if(textureProp == null)
+                if (textureProp == null)
                 {
                     throw new AggregateException($"Could not load create instance from the passed dictionary, as it contains an unexpected key: {pair.Key}. Contact DEV.");
                 }
