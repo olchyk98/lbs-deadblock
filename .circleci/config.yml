@@ -1,6 +1,20 @@
 version: 2.1
 
 jobs:
+  check-style:
+    docker:
+      - image: mcr.microsoft.com/dotnet/sdk:5.0
+    steps:
+      - checkout
+      - run:
+          name: Install Testing Utils
+          command: |
+            dotnet tool install -g dotnet-format
+      - run:
+          name: Check Code Formatting
+          command: |
+            export PATH="$PATH:/root/.dotnet/tools"
+            dotnet format Deadblock.csproj --check
   test-build:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1-focal
@@ -11,8 +25,8 @@ jobs:
           name: Try Building
           command: |
             dotnet build Deadblock.csproj --configuration release
-
 workflows:
   sample:
     jobs:
+      - check-style
       - test-build
