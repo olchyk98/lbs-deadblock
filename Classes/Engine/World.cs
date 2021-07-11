@@ -225,8 +225,6 @@ namespace Deadblock.Engine
             var tempMatrixX = (int)Math.Floor(aPosition.X / tempBlockSize);
             var tempMatrixY = (int)Math.Floor(aPosition.Y / tempBlockSize) + 1;
 
-            Console.WriteLine($"{tempMatrixY}:{tempMatrixX}");
-
             //////////////////////////
 
             var isOutBounds = (
@@ -234,7 +232,6 @@ namespace Deadblock.Engine
                 || tempMatrixX < 0 || tempMatrixX > myMapSequence[0][0].Length - 1
             );
 
-            Console.WriteLine("passes");
             if (isOutBounds) return new ISpriteBlock[] { };
 
             //////////////////////////
@@ -252,7 +249,6 @@ namespace Deadblock.Engine
 
             //////////////////////////
 
-            Console.WriteLine(tempBlocks.Count);
             return tempBlocks.ToArray();
         }
     }
