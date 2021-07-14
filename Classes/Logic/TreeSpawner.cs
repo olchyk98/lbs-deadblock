@@ -39,7 +39,7 @@ namespace Deadblock.Logic
 
             if (mySpawnQuota <= 0 && !myHasPlant)
             {
-                myHasPlant = true;
+                SpawnPlant();
             }
         }
 
@@ -48,6 +48,16 @@ namespace Deadblock.Logic
             Chop();
 
             base.InteractWith(anEntity);
+        }
+
+        /// <summary>
+        /// Spawns plant
+        /// and enables collider for the block.
+        /// </summary>
+        private void SpawnPlant()
+        {
+            myHasPlant = true;
+            HasCollider = true;
         }
 
         /// <summary>
@@ -64,6 +74,7 @@ namespace Deadblock.Logic
 
             mySpawnQuota = NativeUtils.RandomizeValue(5f, 15f);
             myHasPlant = false;
+            HasCollider = false;
 
             return true;
         }
