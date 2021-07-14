@@ -7,8 +7,8 @@ namespace Deadblock
         [STAThread]
         static void Main()
         {
-            using (var game = new GameProcess())
-                game.Run();
+            using (var tempGame = new GameProcess())
+                tempGame.Run();
         }
     }
 }

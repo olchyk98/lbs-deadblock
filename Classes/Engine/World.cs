@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Deadblock.Generic;
@@ -11,91 +12,145 @@ namespace Deadblock.Engine
 {
     public class World : DeliveredGameSlot
     {
-        private Dictionary<char, ISpriteBlock> mySpriteMap;
-        private char[][][] myMapSequence;
+        // NOTE: This thing, could potentially be
+        // improved using a container with matrixPosition
+        // member, but then it would be much harder
+        // to handle layers.
+        private ISpriteBlock[,,] myMap;
+        private WorkerTexture[] myMapTextures;
+
         private List<DrawableEntity> myEntities;
 
-        private static string[] MapSequenceLayerPaths = new string[] {
+        private static string[] MapReferenceLayerPaths = new string[] {
             @"./Content/Levels/TheMain/ground.txt",
             @"./Content/Levels/TheMain/interactable.txt"
         };
 
         public World(GameProcess aGame) : base(aGame)
         {
-            RegisterTextures(aGame);
-            LoadMapSequence();
+            LoadMap();
             InstantiateEntities();
+        }
+
+        /// <summary>
+        /// Sets block to a cell position.
+        /// </summary>
+        /// <param name="aBlock">
+        /// Targeted block.
+        /// Can be null if the position
+        /// should be empty.
+        /// </param>
+        /// <param name="aMatrixPosition">
+        /// Position in the matrix,
+        /// which is represented as Vector3,
+        /// where Z axis references layerIndex.
+        /// </param>
+        private void AssignBlockToMapCell(ISpriteBlock aBlock, Vector3 aMatrixPosition)
+        {
+            var Z = (int)aMatrixPosition.Z;
+            var X = (int)aMatrixPosition.X;
+            var Y = (int)aMatrixPosition.Y;
+            myMap[Z, Y, X] = aBlock;
         }
 
         /// <summary>
         /// Loads texture to the spritemap
         /// with the specified id.
         /// </summary>
-        /// <param name="aGame">
-        /// Targeted game process.
-        /// </param>
-        /// <param name="anId">
-        /// Id of the texture used in a
-        /// level layer.
-        /// </param>
-        /// <param name="aKey">
+        /// <param name="aReferenceKey">
         /// Key of the texture,
         /// that was already registered
         /// in targeted ContentWorker.
         /// </param>
-        private void RegisterTexture(GameProcess aGame, WorkerTexture aSpec)
+        /// <param name="aCellPosition">
+        /// Position of the cell, represented
+        /// as vector3, where Z axis corresponds
+        /// to the layer index.
+        /// </param>
+        private void InstantiateMapCell(char aReferenceKey, Vector3 aCellPosition)
         {
             ISpriteBlock tempInstance = default;
+            var tempSpec = GetEnvTexture(aReferenceKey);
 
-            if (aSpec.ActiveInstanceName != null)
+            // Handle air
+            if (aReferenceKey == '0')
             {
-                Type tempType = Type.GetType(aSpec.ActiveInstanceName);
+                AssignBlockToMapCell(null, aCellPosition);
+                return;
+            }
+
+            if (tempSpec == null)
+            {
+                throw new AggregateException($"An invalid referenceKey detected: { aReferenceKey }. Looks like a logic problem. Contact DEV.");
+            }
+
+            // Handle special block
+            if (tempSpec.ActiveInstanceName != null)
+            {
+                Type tempType = Type.GetType(tempSpec.ActiveInstanceName);
 
                 if (tempType == null)
                 {
-                    throw new AggregateException($"An error in the schema file. Referenced an invalid active instance: { aSpec.ActiveInstanceName }. Contact DEV.");
+                    throw new AggregateException($"An error in the schema file. Referenced an invalid active instance: { tempSpec.ActiveInstanceName }. Contact DEV.");
                 }
 
                 tempInstance = (ISpriteBlock)Activator.CreateInstance(
                     tempType,
                     gameInstance,
-                    aSpec.Name
+                    tempSpec.Name
                 );
             }
             else
             {
-                tempInstance = new SpriteBlock(aGame, aSpec.Name);
+                // Handle regular sprite block
+                tempInstance = new SpriteBlock(gameInstance, tempSpec.Name);
             }
 
+            AssignBlockToMapCell(tempInstance, aCellPosition);
+        }
 
-            mySpriteMap[aSpec.ID] = tempInstance;
+        /// <summary>
+        /// Returns registered env texture
+        /// with the specified id.
+        /// </summary>
+        /// <param name="anId">
+        /// Id of the targeted env texture.
+        /// </param>
+        /// <returns>
+        /// Targeted env texture or null
+        /// if it's not found.
+        /// </returns>
+        private WorkerTexture GetEnvTexture(char anId)
+        {
+            return myMapTextures
+                .ToList()
+                .Find((f) => f.ID == anId);
         }
 
         /// <summary>
         /// Creates and fills spritemap with pre-defined
         /// textures, which are represented as spriteblocks.
         /// </summary>
-        /// <param name="aGame">
-        /// Targeted game process.
-        /// </param>
-        private void RegisterTextures(GameProcess aGame)
+        private void LoadMap()
         {
-            mySpriteMap = new Dictionary<char, ISpriteBlock>();
-            WorkerTexture[] envTextures = gameInstance.GameContents.GetTexturesByPrefix("env");
+            myMapTextures = gameInstance.GameContents.GetTexturesByPrefix("env");
+            var tempMapReference = FileUtils.ReadAs3DSequence(MapReferenceLayerPaths);
 
-            foreach (var spec in envTextures)
-            {
-                RegisterTexture(gameInstance, spec);
-            }
-        }
+            /////////////////
 
-        /// <summary>
-        /// Loads map sequence from specified
-        /// file.
-        /// </summary>
-        private void LoadMapSequence()
-        {
-            myMapSequence = FileUtils.ReadAs3DSequence(MapSequenceLayerPaths);
+            myMap = new ISpriteBlock[tempMapReference.Length, tempMapReference[0].Length, tempMapReference[0][0].Length];
+
+            /////////////////
+
+            for (var ml = 0; ml < tempMapReference.Length; ++ml)
+                for (var my = 0; my < tempMapReference[0].Length; ++my)
+                    for (var mx = 0; mx < tempMapReference[0][0].Length; mx++)
+                    {
+                        var referenceKey = tempMapReference[ml][my][mx];
+                        var cellPosition = new Vector3(mx, my, ml);
+
+                        InstantiateMapCell(referenceKey, cellPosition);
+                    }
         }
 
         /// <summary>
@@ -128,31 +183,23 @@ namespace Deadblock.Engine
 
             //////////////////////////////
 
-            Action<int, int, int> renderPosition = (int layerIndex, int x, int y) =>
+            Action<int, int, int> renderPosition = (layerIndex, x, y) =>
             {
-                char spriteId = myMapSequence[layerIndex][y][x];
+                var block = myMap[layerIndex, y, x];
 
-                // Void should be ignored
-                if (spriteId == '0') return;
-
-                // DEV should be notified about a potential bug
-                if (!mySpriteMap.ContainsKey(spriteId))
-                {
-                    throw new AggregateException($"Found unexpected sprite id in the level layer reference file. Position: {x}:{y}; Value: {spriteId}. Please contact DEV.");
-                }
-
-                var sprite = mySpriteMap[spriteId];
+                // Ignore air
+                if (block == null) return;
 
                 // Centered to the block
                 var position = new Vector2(blockSize * x, blockSize * y);
-                sprite.Render(position);
+                block.Render(position);
             };
 
             //////////////////////////////
 
-            for (var ml = 0; ml < myMapSequence.Length; ++ml)
-                for (var my = 0; my < myMapSequence[0].Length; ++my)
-                    for (var mx = 0; mx < myMapSequence[0][0].Length; mx++)
+            for (var ml = 0; ml < myMap.GetLength(0); ++ml)
+                for (var my = 0; my < myMap.GetLength(1); ++my)
+                    for (var mx = 0; mx < myMap.GetLength(2); ++mx)
                         renderPosition(ml, mx, my);
         }
 
@@ -197,7 +244,6 @@ namespace Deadblock.Engine
         /// </summary>
         public void Update()
         {
-            // TODO: UpdateMap (spawn trees)
             UpdateEntities();
         }
 
@@ -219,7 +265,7 @@ namespace Deadblock.Engine
         public ISpriteBlock[] GetBlocksOnPosition(Vector2 aPosition)
         {
             var tempBlockSize = GameGlobals.SCREEN_BLOCK_SIZE;
-            var tempLayersCount = myMapSequence.Length;
+            var tempLayersCount = myMap.GetLength(0);
             var tempBlocks = new List<ISpriteBlock>();
 
             var tempMatrixX = (int)Math.Floor(aPosition.X / tempBlockSize);
@@ -228,22 +274,22 @@ namespace Deadblock.Engine
             //////////////////////////
 
             var isOutBounds = (
-                tempMatrixY < 0 || tempMatrixY > myMapSequence[0].Length - 1
-                || tempMatrixX < 0 || tempMatrixX > myMapSequence[0][0].Length - 1
+                tempMatrixY < 0 || tempMatrixY > myMap.GetLength(1) - 1
+                || tempMatrixX < 0 || tempMatrixX > myMap.GetLength(2) - 1
             );
 
             if (isOutBounds) return new ISpriteBlock[] { };
 
             //////////////////////////
 
-            foreach (char[][] layerMatrix in myMapSequence)
+            for (var layerIndex = 0; layerIndex < myMap.GetLength(0); ++layerIndex)
             {
-                var targetChar = layerMatrix[tempMatrixY][tempMatrixX];
 
-                // Air should be ignored.
-                if (targetChar == '0') continue;
+                var targetBlock = myMap[layerIndex, tempMatrixY, tempMatrixX];
 
-                var targetBlock = mySpriteMap[targetChar];
+                // Ignore air
+                if (targetBlock == null) continue;
+
                 tempBlocks.Add(targetBlock);
             }
 
