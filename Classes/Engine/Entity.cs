@@ -8,6 +8,7 @@ namespace Deadblock.Engine
     public abstract class Entity : DeliveredGameSlot
     {
         public Vector2 Position { get; private set; }
+        public Vector2 Rotation { get; private set; }
         public int Speed { get; private set; }
         public float Health { get; private set; }
         public float MaxHealth { get; }
@@ -20,6 +21,7 @@ namespace Deadblock.Engine
             Position = new Vector2(0, 0);
             Speed = 1;
             isActive = true;
+            Rotation = new Vector2(0, -1);
         }
 
         /// <summary>
@@ -68,6 +70,8 @@ namespace Deadblock.Engine
 
         /// <summary>
         /// Moves entity with the specified force.
+        /// Also rotates entity to the specified direction,
+        /// inherited from the force value.
         /// </summary>
         /// <param name="aForce">
         /// Targeted force.
@@ -92,6 +96,8 @@ namespace Deadblock.Engine
             //////////////////
 
             SetPosition(tempNextPosition);
+            Rotation = aForce;
+
             return tempNextPosition;
         }
 

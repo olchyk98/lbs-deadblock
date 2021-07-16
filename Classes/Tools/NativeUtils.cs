@@ -107,6 +107,17 @@ namespace Deadblock.Tools
         /// "variant: super;" with splitter ':' and anEnd ';'
         /// will be parsed into { variant: super }
         /// </summary>
+        /// <param name="aTarget">
+        /// String that's going to be deconstructed.
+        /// </param>
+        /// <param name="aSplitter">
+        /// Split char (:)
+        /// Example: hello: world.
+        /// </param>
+        /// <param name="anEnd">
+        /// End char (;)
+        /// Example: hello: world; hello2: there;
+        /// </param>
         public static Dictionary<string, string> SplitStringIntoDict(string aTarget, char aSplitter = ':', char anEnd = ';')
         {
             var tempStorage = new Dictionary<string, string>();
