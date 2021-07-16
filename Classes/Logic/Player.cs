@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Deadblock.Tools;
+using System;
 
 namespace Deadblock.Logic
 {
@@ -30,6 +31,37 @@ namespace Deadblock.Logic
         }
 
         /// <summary>
+        /// Sets player sprite according
+        /// to the movement direction.
+        /// </summary>
+        protected void UpdateSprite()
+        {
+            if (Rotation.X == 1)
+            {
+                SetSpriteVariant("Right");
+                return;
+            }
+
+            if (Rotation.X == -1)
+            {
+                SetSpriteVariant("Left");
+                return;
+            }
+
+            if (Rotation.Y == 1)
+            {
+                SetSpriteVariant("Down");
+                return;
+            }
+
+            if (Rotation.Y == -1)
+            {
+                SetSpriteVariant("Up");
+                return;
+            }
+        }
+
+        /// <summary>
         /// Assigns listeners
         /// to the input handler to
         /// give user the ability
@@ -37,28 +69,30 @@ namespace Deadblock.Logic
         /// </summary>
         protected void ConnectInput()
         {
+            Action<Vector2> Move = (direction) =>
+            {
+                MoveEntity(direction);
+                UpdateSprite();
+            };
+
             gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) =>
             {
-                MoveEntity(new Vector2(0, -1));
-                SetSpriteVariant("Up");
+                Move(new Vector2(0, -1));
             });
 
             gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) =>
             {
-                MoveEntity(new Vector2(1, 0));
-                SetSpriteVariant("Right");
+                Move(new Vector2(1, 0));
             });
 
             gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) =>
             {
-                MoveEntity(new Vector2(0, 1));
-                SetSpriteVariant("Down");
+                Move(new Vector2(0, 1));
             });
 
             gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) =>
             {
-                MoveEntity(new Vector2(-1, 0));
-                SetSpriteVariant("Left");
+                Move(new Vector2(-1, 0));
             });
 
         }

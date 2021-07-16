@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Deadblock.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Deadmind.Engine
+namespace Deadblock.Engine
 {
     public class WorkerTexture
     {
