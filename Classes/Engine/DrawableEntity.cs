@@ -1,6 +1,5 @@
 using Deadblock.Generic;
 using Deadblock.Engine;
-using System;
 
 namespace Deadblock.Logic
 {
@@ -19,6 +18,17 @@ namespace Deadblock.Logic
         private void LoadTexture(string aTextureName)
         {
             Texture = new SpriteBlock(gameInstance, aTextureName);
+        }
+
+        /// <summary>
+        /// Sets variant for the sprite.
+        /// </summary>
+        /// <param name="aVariant">
+        /// Targeted variant.
+        /// </param>
+        public void SetSpriteVariant(string aVariant)
+        {
+            Texture.SetTextureVariant(aVariant);
         }
 
         /// <summary>

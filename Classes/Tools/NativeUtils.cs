@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace Deadblock.Tools
@@ -64,26 +66,66 @@ namespace Deadblock.Tools
             return true;
         }
 
-        public static float RandomizeValue<T>(T aMin, T aMax)
+        /// <summary>
+        /// Randomizes value in the specified range.
+        /// Returns the same type as the specified values.
+        /// </summary>
+        /// <param name="aMin">
+        /// Minimal boundary.
+        /// </param>
+        /// <param name="aMax">
+        /// Maximal boundary.
+        /// </param>
+        /// <returns>
+        /// Randomized value in boundaries.
+        /// </returns>
+        public static float RandomizeValue(float aMin, float aMax)
         {
             var randomInstance = new Random();
 
-            if (typeof(T) == typeof(int))
+            var tempMin = (float)Convert.ToDouble(aMin);
+            var tempMax = (float)Convert.ToDouble(aMax);
+            var tempSample = (float)randomInstance.NextDouble();
+
+            return (tempSample * tempMax) + tempMin;
+        }
+
+        public static int RandomizeValue(int aMin, int aMax)
+        {
+            var randomInstance = new Random();
+
+            var tempMin = Convert.ToInt32(aMin);
+            var tempMax = Convert.ToInt32(aMax);
+
+            return (int)randomInstance.Next(tempMin, tempMax);
+        }
+
+        /// <summary>
+        /// Spits a string into a dictionary.
+        /// For Example:
+        ///
+        /// "variant: super;" with splitter ':' and anEnd ';'
+        /// will be parsed into { variant: super }
+        /// </summary>
+        public static Dictionary<string, string> SplitStringIntoDict(string aTarget, char aSplitter = ':', char anEnd = ';')
+        {
+            var tempStorage = new Dictionary<string, string>();
+            var entries = aTarget.Split(anEnd).Select((f) => f.Trim());
+
+            foreach (string entry in entries)
             {
-                var tempMin = Convert.ToInt32(aMin);
-                var tempMax = Convert.ToInt32(aMax);
-                return (int)randomInstance.Next(tempMin, tempMax);
+                if (string.IsNullOrEmpty(entry)) continue;
+
+                string[] pair = entry.Trim().Split(aSplitter).Select((f) => f.Trim()).ToArray();
+                if (pair.Length != 2)
+                {
+                    throw new AggregateException($"Could not split pair, as it contains more than one separator: { entry }");
+                }
+
+                tempStorage.Add(pair[0], pair[1]);
             }
 
-            if (typeof(T) == typeof(float))
-            {
-                var tempMin = (float)Convert.ToDouble(aMin);
-                var tempMax = (float)Convert.ToDouble(aMax);
-                var tempSample = (float)randomInstance.NextDouble();
-                return (tempSample * tempMax) + tempMin;
-            }
-
-            return default;
+            return tempStorage;
         }
     }
 }

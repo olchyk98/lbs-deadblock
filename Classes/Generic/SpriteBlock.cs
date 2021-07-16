@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Logic;
 using Deadmind.Engine;
+using System;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Deadblock.Generic
 {
@@ -16,6 +18,7 @@ namespace Deadblock.Generic
     {
         private WorkerTexture myTextureSpec;
         public bool HasCollider { get; } = false;
+        private string myCurrentTextureKey = "Default";
 
         public SpriteBlock(GameProcess aGame, string aTextureKey) : base(aGame)
         {
@@ -49,8 +52,8 @@ namespace Deadblock.Generic
         /// </returns>
         private Vector2 GetRelativePosition(Vector2 aPosition)
         {
-            var tempTexture = myTextureSpec.Texture;
             const int blockSize = GameGlobals.SCREEN_BLOCK_SIZE;
+            var tempTexture = GetActiveTexture();
 
             int w = tempTexture.Width;
             int h = tempTexture.Height;
@@ -80,6 +83,31 @@ namespace Deadblock.Generic
         }
 
         /// <summary>
+        /// Sets variant key,
+        /// that is used to decide which
+        /// texture will be rendered.
+        /// The default/original value is "Default".
+        /// </summary>
+        public void SetTextureVariant(string aVariant = "Default")
+        {
+            if (!myTextureSpec.Textures.ContainsKey(aVariant))
+            {
+                throw new AggregateException($"Tried to set an invalid sprite variant: {aVariant} for texture {myTextureSpec.Name}");
+            }
+
+            myCurrentTextureKey = aVariant;
+        }
+
+        /// <summary>
+        /// Returns a currently
+        /// active texture.
+        /// </summary>
+        public Texture2D GetActiveTexture()
+        {
+            return myTextureSpec.Textures[myCurrentTextureKey];
+        }
+
+        /// <summary>
         /// Draws object on the screen
         /// on the specified position.
         /// Position is transformed with
@@ -98,8 +126,10 @@ namespace Deadblock.Generic
         /// </param>
         public void Render(Vector2 aPosition, bool isRelative = true)
         {
+
+            var tempTexture = GetActiveTexture();
             var tempPosition = (isRelative) ? GetRelativePosition(aPosition) : aPosition;
-            gameInstance.SpriteBatch.Draw(myTextureSpec.Texture, tempPosition, Color.White);
+            gameInstance.SpriteBatch.Draw(tempTexture, tempPosition, Color.White);
         }
 
         /// <summary>
@@ -112,7 +142,8 @@ namespace Deadblock.Generic
         /// </returns>
         public Vector2 GetDimensions()
         {
-            var tempRawTexture = myTextureSpec.Texture;
+            var tempRawTexture = GetActiveTexture();
+
             return new Vector2(tempRawTexture.Width, tempRawTexture.Width);
         }
     }
