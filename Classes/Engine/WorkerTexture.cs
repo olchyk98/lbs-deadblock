@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Deadblock.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,18 +25,25 @@ namespace Deadmind.Engine
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// Absolute or Relative path to
+        /// Absolute or Relative paths to
         /// the texture on the running machine.
+        /// Represented as dictionary,
+        /// in format variantName: texturePath.
         ///
-        /// Example value: ./foo/bar.png
-        /// Example value: /coreusr/bart/foot.png
+        /// Varient "Default" is always present is the dictionary.
+        ///
+        /// Example value: Default: ./foo/bar.png
+        /// Example value: TopSide: /coreusr/bart/foot.png
         /// </summary>
-        public string Path { get; set; }
+        public Dictionary<string, string> Paths { get; set; }
         /// <summary>
-        /// Texture instance created
+        /// Texture instances created
         /// from contents of the referenced file.
+        /// Represented as dictionary, in format
+        /// variantName: texture.
+        /// Variant "Default" is always present in the dictionary.
         /// </summary>
-        public Texture2D Texture { get; set; }
+        public Dictionary<string, Texture2D> Textures { get; set; }
         /// <summary>
         /// Position mode, which decides
         /// how the texture will be placed during rendering.

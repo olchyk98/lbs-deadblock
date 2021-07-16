@@ -1,22 +1,22 @@
 ----------------------------
 ID: 1
 Name: env/main-grass
-Path: ./Content/Sprites/Environment/Ground/tile006.png
+Paths: Default > ./Content/Sprites/Environment/Ground/tile006.png;
 DrawPositionMode: ORIGINAL_POINT
 ----------------------------
 ID: 2
 Name: env/green-tree
-Path: ./Content/Sprites/Environment/Entries/SmallTree.png
+Paths: Default > ./Content/Sprites/Environment/Entries/SmallTree.png;
 DrawPositionMode: BOTTOM_TO_POINT
 ----------------------------
 ID: 3
 Name: ent/player
-Path: ./Content/Sprites/Players/Main/Bottom.png
+Paths: Default > ./Content/Sprites/Players/Main/Bottom.png; Up > ./Content/Sprites/Players/Main/Top.png; Left > ./Content/Sprites/Players/Main/Left.png; Right > ./Content/Sprites/Players/Main/Right.png; Down > ./Content/Sprites/Players/Main/Bottom.png;
 DrawPositionMode: ORIGINAL_POINT
 ----------------------------
 ID: 4
 Name: env/tree-spawner
-Path: ./Content/Sprites/Environment/Ground/tile006.png
+Paths: Default > ./Content/Sprites/Environment/Ground/tile006.png;
 DrawPositionMode: ORIGINAL_POINT
 ActiveInstanceName: Deadblock.Logic.TreeSpawner
 ----------------------------

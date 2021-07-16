@@ -40,21 +40,25 @@ namespace Deadblock.Logic
             gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) =>
             {
                 MoveEntity(new Vector2(0, -1));
+                SetSpriteVariant("Up");
             });
 
             gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) =>
             {
                 MoveEntity(new Vector2(1, 0));
+                SetSpriteVariant("Right");
             });
 
             gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) =>
             {
                 MoveEntity(new Vector2(0, 1));
+                SetSpriteVariant("Down");
             });
 
             gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) =>
             {
                 MoveEntity(new Vector2(-1, 0));
+                SetSpriteVariant("Left");
             });
 
         }

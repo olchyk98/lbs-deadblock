@@ -18,6 +18,29 @@ namespace Deadblock.Engine
         }
 
         /// <summary>
+        /// Loads all textures from the spec.
+        /// </summary>
+        /// <param name="aSpec">
+        /// Dictionary in format:
+        /// variant: relative or absolute path to the texture.
+        /// </param>
+        /// <returns>
+        /// Dictionary in format:
+        /// variant: texture.
+        /// </returns>
+        private Dictionary<string, Texture2D> LoadTexturesFromSpec(Dictionary<string, string> aSpec)
+        {
+            var tempTextures = new Dictionary<string, Texture2D>();
+
+            foreach (var pair in aSpec)
+            {
+                tempTextures[pair.Key] = Texture2D.FromFile(gameInstance.GraphicsDevice, pair.Value);
+            }
+
+            return tempTextures;
+        }
+
+        /// <summary>
         /// Loads source configs
         /// from the specified file.
         /// </summary>
@@ -31,9 +54,9 @@ namespace Deadblock.Engine
 
             foreach (var config in tempConfigs)
             {
-                var textureSpec = AggregationUtils.CreateInstanceFromDictionary<WorkerTexture>(config);
+                var textureSpec = AggregationUtils.CreateInstanceFromConfigBlock<WorkerTexture>(config);
 
-                textureSpec.Texture = Texture2D.FromFile(gameInstance.GraphicsDevice, textureSpec.Path);
+                textureSpec.Textures = LoadTexturesFromSpec(textureSpec.Paths);
                 tempSources[config["Name"]] = textureSpec;
             }
 
