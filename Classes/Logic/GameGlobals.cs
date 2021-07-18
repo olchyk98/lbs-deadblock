@@ -1,4 +1,4 @@
-namespace Logic
+namespace Deadblock.Logic
 {
     public static class GameGlobals
     {

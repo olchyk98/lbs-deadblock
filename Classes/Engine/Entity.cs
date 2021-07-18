@@ -8,7 +8,7 @@ namespace Deadblock.Engine
     public abstract class Entity : DeliveredGameSlot
     {
         public Vector2 Position { get; private set; }
-        public Vector2 Rotation { get; private set; }
+        public Vector2 Direction { get; private set; }
         public int Speed { get; private set; }
         public float Health { get; private set; }
         public float MaxHealth { get; }
@@ -21,7 +21,7 @@ namespace Deadblock.Engine
             Position = new Vector2(0, 0);
             Speed = 1;
             isActive = true;
-            Rotation = new Vector2(0, -1);
+            Direction = new Vector2(0, -1);
         }
 
         /// <summary>
@@ -81,6 +81,10 @@ namespace Deadblock.Engine
         /// </returns>
         public Vector2 MoveEntity(Vector2 aForce)
         {
+            Direction = aForce;
+
+            //////////////////
+
             var tempNextPosition = Position + aForce * Speed;
 
             //////////////////
@@ -95,10 +99,7 @@ namespace Deadblock.Engine
 
             //////////////////
 
-            SetPosition(tempNextPosition);
-            Rotation = aForce;
-
-            return tempNextPosition;
+            return SetPosition(tempNextPosition);
         }
 
         /// <summary>
@@ -114,6 +115,10 @@ namespace Deadblock.Engine
         /// <returns>
         /// Specified Position.
         /// </returns>
+        /// <throws>
+        /// AggregateException, if the position
+        /// is off screen.
+        /// </throws>
         public Vector2 SetPosition(Vector2 aPosition)
         {
             var isOfScreen = NativeUtils.IsPointOnCanvas(gameInstance, aPosition);
