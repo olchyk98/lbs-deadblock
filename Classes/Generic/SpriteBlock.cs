@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using Logic;
+using Deadblock.Logic;
 using Deadblock.Engine;
 using System;
 using Microsoft.Xna.Framework.Graphics;

@@ -1,6 +1,5 @@
 using Deadblock.Generic;
 using Microsoft.Xna.Framework.Input;
-
 namespace Deadblock.Engine
 {
     public class InputHandler : DeliveredGameSlot
@@ -12,6 +11,8 @@ namespace Deadblock.Engine
         public UniversalEvent<bool> OnMoveLeft { get; }
         public UniversalEvent<bool> OnMoveDown { get; }
 
+        public UniversalEvent<bool> OnRegularUse { get; }
+
         public InputHandler(GameProcess aGame) : base(aGame)
         {
             OnMoveDown = new UniversalEvent<bool>();
@@ -20,6 +21,8 @@ namespace Deadblock.Engine
             OnMoveLeft = new UniversalEvent<bool>();
 
             OnPressButton = new UniversalEvent<Keys>();
+
+            OnRegularUse = new UniversalEvent<bool>();
         }
 
         /// <summary>
@@ -55,6 +58,11 @@ namespace Deadblock.Engine
             if (state.IsKeyDown(Keys.A))
             {
                 OnMoveLeft.Invoke(true);
+            }
+
+            if (state.IsKeyDown(Keys.E))
+            {
+                OnRegularUse.Invoke(true);
             }
         }
     }

@@ -1,6 +1,7 @@
+using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Deadblock.Tools;
-using System;
 
 namespace Deadblock.Logic
 {
@@ -36,28 +37,50 @@ namespace Deadblock.Logic
         /// </summary>
         protected void UpdateSprite()
         {
-            if (Rotation.X == 1)
+            if (Direction.X == 1)
             {
                 SetSpriteVariant("Right");
                 return;
             }
 
-            if (Rotation.X == -1)
+            if (Direction.X == -1)
             {
                 SetSpriteVariant("Left");
                 return;
             }
 
-            if (Rotation.Y == 1)
+            if (Direction.Y == 1)
             {
                 SetSpriteVariant("Down");
                 return;
             }
 
-            if (Rotation.Y == -1)
+            if (Direction.Y == -1)
             {
                 SetSpriteVariant("Up");
                 return;
+            }
+        }
+
+        /// <summary>
+        /// Interacts with all blocks
+        /// that are in front of the player.
+        /// </summary>
+        protected void InteractWithEnvironment()
+        {
+            var currentPosition = Position;
+            var forwardPosition = Position + Direction * GameGlobals.SCREEN_BLOCK_SIZE;
+
+            var currentBlocks = gameInstance.World.GetBlocksOnPosition(currentPosition);
+            var forwardBlocks = gameInstance.World.GetBlocksOnPosition(forwardPosition);
+
+            var blocks = currentBlocks.Union(forwardBlocks).ToArray();
+
+            foreach (var block in blocks)
+            {
+                if (!(block is InteractableDynamicBlock)) continue;
+                InteractableDynamicBlock interactableBlock = (InteractableDynamicBlock)block;
+                interactableBlock.InteractWith(this);
             }
         }
 
@@ -95,6 +118,10 @@ namespace Deadblock.Logic
                 Move(new Vector2(-1, 0));
             });
 
+            gameInstance.InputHandler.OnRegularUse.Subscribe((bool isActive) =>
+            {
+                InteractWithEnvironment();
+            });
         }
 
         public override void Update()

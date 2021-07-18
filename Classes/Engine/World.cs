@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Deadblock.Generic;
-using Logic;
+using Deadblock.Logic;
 using Deadblock.Engine;
 using Deadblock.Tools;
 using Deadblock.Logic;
