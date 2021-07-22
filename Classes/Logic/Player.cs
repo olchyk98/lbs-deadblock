@@ -7,12 +7,16 @@ namespace Deadblock.Logic
 {
     public class Player : DrawableEntity
     {
+        public PlayerBag Bag { get; private set; }
+
         public Player(GameProcess aGame) : base(aGame, "ent/player", 100)
         {
             PlaceEntity();
             ConnectInput();
 
             SetSpeed(3);
+
+            Bag = new PlayerBag(gameInstance);
         }
 
         /// <summary>

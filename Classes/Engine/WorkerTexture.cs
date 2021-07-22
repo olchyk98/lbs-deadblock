@@ -42,6 +42,7 @@ namespace Deadblock.Engine
         /// Represented as dictionary, in format
         /// variantName: texture.
         /// Variant "Default" is always present in the dictionary.
+        /// The first specified key will be treated as the default texture.
         /// </summary>
         public Dictionary<string, Texture2D> Textures { get; set; }
         /// <summary>
@@ -76,5 +77,33 @@ namespace Deadblock.Engine
         /// Example value: Deadblock.Generic.Vector4
         /// </summary>
         public string ActiveInstanceName { get; set; }
+
+        /// <summary>
+        /// Returns default texture from
+        /// loaded texture variants pack.
+        /// May return null if the list is empty.
+        /// </summary>
+        public Texture2D GetDefaultTexture ()
+        {
+            var tempTextureKey = GetDefaultTextureKey();
+
+            if(tempTextureKey == default) return null;
+            return Textures[tempTextureKey];
+        }
+
+        /// <summary>
+        /// Returns default texture key from loaded texture variants
+        /// pack. May return null if the list is empty.
+        /// </summary>
+        public string GetDefaultTextureKey ()
+        {
+            var tempKeysCollection = Textures.Keys;
+            var tempKeys = new string[tempKeysCollection.Count];
+
+            tempKeysCollection.CopyTo(tempKeys, 0);
+
+            if(tempKeys.Length <= 0) return null;
+            return tempKeys[0];
+        }
     }
 }
