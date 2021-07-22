@@ -12,6 +12,8 @@ namespace Deadblock.Engine
 {
     public class World : DeliveredGameSlot
     {
+        public Player myMainPlayer { get; private set; }
+
         // NOTE: This thing, could potentially be
         // improved using a container with matrixPosition
         // member, but then it would be much harder
@@ -171,6 +173,7 @@ namespace Deadblock.Engine
             ////////////////////////
 
             myEntities.Add(player);
+            myMainPlayer = player;
         }
 
         /// <summary>
