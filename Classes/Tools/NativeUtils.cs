@@ -68,7 +68,6 @@ namespace Deadblock.Tools
 
         /// <summary>
         /// Randomizes value in the specified range.
-        /// Returns the same type as the specified values.
         /// </summary>
         /// <param name="aMin">
         /// Minimal boundary.
@@ -90,6 +89,18 @@ namespace Deadblock.Tools
             return (tempSample * tempMax) + tempMin;
         }
 
+        /// <summary>
+        /// Randomizes value in the specified range.
+        /// </summary>
+        /// <param name="aMin">
+        /// Minimal boundary.
+        /// </param>
+        /// <param name="aMax">
+        /// Maximal boundary.
+        /// </param>
+        /// <returns>
+        /// Randomized value in boundaries.
+        /// </returns>
         public static int RandomizeValue(int aMin, int aMax)
         {
             var randomInstance = new Random();
@@ -98,6 +109,38 @@ namespace Deadblock.Tools
             var tempMax = Convert.ToInt32(aMax);
 
             return (int)randomInstance.Next(tempMin, tempMax);
+        }
+
+        /// <summary>
+        /// Returns a random element from
+        /// the passed array.
+        /// </summary>
+        /// <param name="anArr">
+        /// Targeted array.
+        /// </param>
+        /// <returns>
+        /// Random element from the array.
+        /// </returns>
+        public static T Choice<T>(T[] anArr)
+        {
+            var tempRandomIndex = RandomizeValue(0, anArr.Length);
+            return anArr[tempRandomIndex];
+        }
+
+        /// <summary>
+        /// Returns a random element from
+        /// the passed list.
+        /// </summary>
+        /// <param name="aList">
+        /// Targeted list.
+        /// </param>
+        /// <returns>
+        /// Random element from the list.
+        /// </returns>
+        public static T Choice<T>(List<T> aList)
+        {
+            var tempRandomIndex = RandomizeValue(0, aList.Count);
+            return aList[tempRandomIndex];
         }
 
         /// <summary>
