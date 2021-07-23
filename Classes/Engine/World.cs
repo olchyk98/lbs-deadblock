@@ -20,6 +20,7 @@ namespace Deadblock.Engine
         // to handle layers.
         private ISpriteBlock[,,] myMap;
         private WorkerTexture[] myMapTextures;
+        private MonstersSpawner myMonstersSpawner;
 
         private List<DrawableEntity> myEntities;
 
@@ -30,6 +31,8 @@ namespace Deadblock.Engine
 
         public World(GameProcess aGame) : base(aGame)
         {
+            myMonstersSpawner = new MonstersSpawner(aGame);
+
             LoadMap();
             InstantiateEntities();
         }
@@ -247,6 +250,9 @@ namespace Deadblock.Engine
         /// </summary>
         public void Update()
         {
+            var tempNewMonsters = myMonstersSpawner.ProcessSpawnTick();
+            myEntities = myEntities.Concat(tempNewMonsters.ToList()).ToList();
+
             UpdateEntities();
         }
 

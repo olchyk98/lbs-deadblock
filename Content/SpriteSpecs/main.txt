@@ -20,3 +20,8 @@ Paths: Default > ./Content/Sprites/Environment/Ground/tile006.png;
 DrawPositionMode: ORIGINAL_POINT
 ActiveInstanceName: Deadblock.Logic.TreeSpawner
 ----------------------------
+ID: 5
+Name: ent/spider
+Paths: Default > ./Content/Sprites/Players/Main/Bottom.png; Up > ./Content/Sprites/Players/Main/Top.png; Left > ./Content/Sprites/Players/Main/Left.png; Right > ./Content/Sprites/Players/Main/Right.png; Down > ./Content/Sprites/Players/Main/Bottom.png;
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
