@@ -83,11 +83,11 @@ namespace Deadblock.Engine
         /// loaded texture variants pack.
         /// May return null if the list is empty.
         /// </summary>
-        public Texture2D GetDefaultTexture ()
+        public Texture2D GetDefaultTexture()
         {
             var tempTextureKey = GetDefaultTextureKey();
 
-            if(tempTextureKey == default) return null;
+            if (tempTextureKey == default) return null;
             return Textures[tempTextureKey];
         }
 
@@ -95,14 +95,14 @@ namespace Deadblock.Engine
         /// Returns default texture key from loaded texture variants
         /// pack. May return null if the list is empty.
         /// </summary>
-        public string GetDefaultTextureKey ()
+        public string GetDefaultTextureKey()
         {
             var tempKeysCollection = Textures.Keys;
             var tempKeys = new string[tempKeysCollection.Count];
 
             tempKeysCollection.CopyTo(tempKeys, 0);
 
-            if(tempKeys.Length <= 0) return null;
+            if (tempKeys.Length <= 0) return null;
             return tempKeys[0];
         }
     }

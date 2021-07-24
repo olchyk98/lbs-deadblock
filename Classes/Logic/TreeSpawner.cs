@@ -1,5 +1,6 @@
-using Deadblock.Engine;
+using System;
 using Deadblock.Generic;
+using Deadblock.Engine;
 using Deadblock.Tools;
 using Microsoft.Xna.Framework;
 
@@ -45,7 +46,11 @@ namespace Deadblock.Logic
 
         override public void InteractWith(Entity anEntity)
         {
-            Chop();
+            if (Chop() && anEntity is Player aPlayer)
+            {
+                aPlayer.Bag.CollectTree();
+            }
+
 
             base.InteractWith(anEntity);
         }

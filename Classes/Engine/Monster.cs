@@ -6,7 +6,7 @@ namespace Deadblock.Engine
     {
         public virtual string Name { get; }
 
-        public Monster (GameProcess aGame, string aTextureKey, float someHealth) : base(aGame, aTextureKey, someHealth)
-        {  }
+        public Monster(GameProcess aGame, string aTextureKey, float someHealth) : base(aGame, aTextureKey, someHealth)
+        { }
     }
 }

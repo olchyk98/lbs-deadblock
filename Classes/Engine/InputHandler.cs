@@ -2,7 +2,7 @@ using Deadblock.Generic;
 using Microsoft.Xna.Framework.Input;
 namespace Deadblock.Engine
 {
-    public class InputHandler : DeliveredGameSlot
+    public class InputSystem : DeliveredGameSlot
     {
         public UniversalEvent<Keys> OnPressButton { get; }
 
@@ -13,7 +13,7 @@ namespace Deadblock.Engine
 
         public UniversalEvent<bool> OnRegularUse { get; }
 
-        public InputHandler(GameProcess aGame) : base(aGame)
+        public InputSystem(GameProcess aGame) : base(aGame)
         {
             OnMoveDown = new UniversalEvent<bool>();
             OnMoveUp = new UniversalEvent<bool>();

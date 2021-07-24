@@ -5,7 +5,7 @@ namespace Deadblock.Engine
         public override string Name { get; } = "Spider";
 
         public Spider(GameProcess aGame) : base(aGame, "ent/spider", 25f)
-        {  }
+        { }
 
         public override void Update()
         {

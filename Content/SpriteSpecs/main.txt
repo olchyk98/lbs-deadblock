@@ -25,3 +25,8 @@ Name: ent/spider
 Paths: Default > ./Content/Sprites/Players/Main/Bottom.png; Up > ./Content/Sprites/Players/Main/Top.png; Left > ./Content/Sprites/Players/Main/Left.png; Right > ./Content/Sprites/Players/Main/Right.png; Down > ./Content/Sprites/Players/Main/Bottom.png;
 DrawPositionMode: ORIGINAL_POINT
 ----------------------------
+ID: 6
+Name: icon/tree
+Paths: Default > ./Content/GUI/Icons/Tree.png;
+DrawPositionMode: ORIGINAL_POINT
+----------------------------

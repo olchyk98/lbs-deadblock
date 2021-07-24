@@ -9,12 +9,12 @@ namespace Deadblock.GUI
             myCurrentValue = "0";
         }
 
-        public override void Draw ()
+        public override void Draw()
         {
             base.Draw();
         }
 
-        public override void Update ()
+        public override void Update()
         {
             var nOfTrees = gameInstance.World.myMainPlayer.Bag.Trees;
             myCurrentValue = nOfTrees.ToString();

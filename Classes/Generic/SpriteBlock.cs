@@ -36,7 +36,7 @@ namespace Deadblock.Generic
         {
             myTextureSpec = gameInstance.GameContents.GetTexture(aTextureKey);
 
-            if(!myTextureSpec.Textures.ContainsKey(myCurrentTextureKey))
+            if (!myTextureSpec.Textures.ContainsKey(myCurrentTextureKey))
             {
                 throw new FormatException($"Loaded texture does not have the default texture. Texture name: { myTextureSpec.Name }. Contact DEV.");
             }
