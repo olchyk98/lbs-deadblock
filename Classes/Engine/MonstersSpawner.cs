@@ -10,7 +10,7 @@ namespace Deadblock.Engine
     {
         private int myTicksToSpawn;
 
-        public MonstersSpawner (GameProcess aGame) : base(aGame) 
+        public MonstersSpawner(GameProcess aGame) : base(aGame)
         {
             ResetSpawnCooldown();
         }
@@ -19,7 +19,7 @@ namespace Deadblock.Engine
         /// Resets ticks to spawn value.
         /// Sets to a random number of ticks.
         /// </summary>
-        private void ResetSpawnCooldown ()
+        private void ResetSpawnCooldown()
         {
             myTicksToSpawn = NativeUtils.RandomizeValue(50, 400);
         }
@@ -27,26 +27,26 @@ namespace Deadblock.Engine
         /// <summary>
         /// Randomizes a monster.
         /// </summary>
-        private Monster RandomizeMonster ()
+        private Monster RandomizeMonster()
         {
             var tempParentType = typeof(Monster);
             var tempAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var tempImplementedTypes = tempAssemblies.SelectMany((f) => f.GetTypes()).Where((f) => tempParentType.IsAssignableFrom(f) && !f.Equals(tempParentType)).ToList();
 
             var tempMonsterType = NativeUtils.Choice<Type>(tempImplementedTypes);
-            return (Monster) Activator.CreateInstance(tempMonsterType, gameInstance);
+            return (Monster)Activator.CreateInstance(tempMonsterType, gameInstance);
         }
 
         /// <summary>
         /// Randomizes an array of monsters
         /// and returns it.
         /// </summary>
-        private Monster[] RandomizeMonsters ()
+        private Monster[] RandomizeMonsters()
         {
             var tempMonsters = new List<Monster>();
             var tempNOfMonsters = NativeUtils.RandomizeValue(3, 10);
 
-            for(var ma = 0; ma < tempNOfMonsters; ++ma)
+            for (var ma = 0; ma < tempNOfMonsters; ++ma)
             {
                 var tempMonster = RandomizeMonster();
                 tempMonsters.Add(tempMonster);
@@ -65,15 +65,15 @@ namespace Deadblock.Engine
         /// May be empty if no new monsters
         /// were created on a tick.
         /// </returns>
-        public Monster[] ProcessSpawnTick ()
+        public Monster[] ProcessSpawnTick()
         {
-            if(--myTicksToSpawn <= 0)
+            if (--myTicksToSpawn <= 0)
             {
                 ResetSpawnCooldown();
                 return RandomizeMonsters();
             }
 
-            return new Monster[] {  };
+            return new Monster[] { };
         }
     }
 }

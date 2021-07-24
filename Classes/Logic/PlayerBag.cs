@@ -7,24 +7,21 @@ namespace Deadblock.Logic
         public int Trees { get; private set; }
 
         public PlayerBag(GameProcess aGame) : base(aGame)
-        {  }
+        {
+            ResetState();
+        }
 
         /// <summary>
         /// Resets all bag values to zero.
         /// </summary>
-        public void ClearValues ()
+        public void ResetState()
         {
-            ResetTreesCount();
+            Trees = 0;
         }
-
-        /// <summary>
-        /// Sets trees count to zero.
-        /// </summary>
-        public int ResetTreesCount () => Trees = 0;
 
         /// <summary>
         /// Increments a tree to the bag.
         /// </summary>
-        public int AddTree () => Trees++;
+        public int CollectTree() => Trees++;
     }
 }

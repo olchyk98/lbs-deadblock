@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Deadblock.Generic;
 using Deadblock.Logic;
-using Deadblock.Engine;
 using Deadblock.Tools;
-using Deadblock.Logic;
 
 namespace Deadblock.Engine
 {
@@ -234,6 +232,23 @@ namespace Deadblock.Engine
         }
 
         /// <summary>
+        /// May potentially spawn
+        /// monsters by calling the spawner.
+        /// </summary>
+        /// <returns>
+        /// True, if any new
+        /// monsters were summoned.
+        /// </returns>
+        private bool SpawnMonsters()
+        {
+            Monster[] tempNewMonsters = myMonstersSpawner.ProcessSpawnTick();
+            if (tempNewMonsters.Length <= 0) return false;
+
+            myEntities = myEntities.Concat(tempNewMonsters.ToList()).ToList();
+            return true;
+        }
+
+        /// <summary>
         /// Renders entities and
         /// constructed environment.
         /// </summary>
@@ -250,9 +265,7 @@ namespace Deadblock.Engine
         /// </summary>
         public void Update()
         {
-            var tempNewMonsters = myMonstersSpawner.ProcessSpawnTick();
-            myEntities = myEntities.Concat(tempNewMonsters.ToList()).ToList();
-
+            SpawnMonsters();
             UpdateEntities();
         }
 

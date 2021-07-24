@@ -102,27 +102,27 @@ namespace Deadblock.Logic
                 UpdateSprite();
             };
 
-            gameInstance.InputHandler.OnMoveUp.Subscribe((bool isActive) =>
+            gameInstance.InputSystem.OnMoveUp.Subscribe((bool isActive) =>
             {
                 Move(new Vector2(0, -1));
             });
 
-            gameInstance.InputHandler.OnMoveRight.Subscribe((bool isActive) =>
+            gameInstance.InputSystem.OnMoveRight.Subscribe((bool isActive) =>
             {
                 Move(new Vector2(1, 0));
             });
 
-            gameInstance.InputHandler.OnMoveDown.Subscribe((bool isActive) =>
+            gameInstance.InputSystem.OnMoveDown.Subscribe((bool isActive) =>
             {
                 Move(new Vector2(0, 1));
             });
 
-            gameInstance.InputHandler.OnMoveLeft.Subscribe((bool isActive) =>
+            gameInstance.InputSystem.OnMoveLeft.Subscribe((bool isActive) =>
             {
                 Move(new Vector2(-1, 0));
             });
 
-            gameInstance.InputHandler.OnRegularUse.Subscribe((bool isActive) =>
+            gameInstance.InputSystem.OnRegularUse.Subscribe((bool isActive) =>
             {
                 InteractWithEnvironment();
             });

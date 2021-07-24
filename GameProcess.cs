@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Deadblock.Engine;
+using Deadblock.GUI;
 
 namespace Deadblock
 {
@@ -11,7 +11,8 @@ namespace Deadblock
 
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentWorker GameContents { get; private set; }
-        public InputHandler InputHandler { get; private set; }
+        public InputSystem InputSystem { get; private set; }
+        public GUIOverlay GUIOverlay { get; private set; }
         public World World { get; private set; }
 
         public GameProcess()
@@ -24,9 +25,10 @@ namespace Deadblock
 
         protected override void Initialize()
         {
-            InputHandler = new InputHandler(this);
+            InputSystem = new InputSystem(this);
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
             World = new World(this);
+            GUIOverlay = new GUIOverlay(this);
 
             base.Initialize();
         }
@@ -38,8 +40,9 @@ namespace Deadblock
 
         protected override void Update(GameTime gameTime)
         {
-            InputHandler.Update();
+            InputSystem.Update();
             World.Update();
+            GUIOverlay.Update();
 
             base.Update(gameTime);
         }
@@ -49,7 +52,10 @@ namespace Deadblock
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             SpriteBatch.Begin();
+
             World.Draw();
+            GUIOverlay.Draw();
+
             SpriteBatch.End();
 
             base.Draw(gameTime);
