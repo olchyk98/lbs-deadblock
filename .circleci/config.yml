@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Testing Utils
+          name: Install Dependencies
           command: |
             dotnet tool install -g dotnet-format
       - run:
@@ -20,6 +20,11 @@ jobs:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1-focal
     steps:
       - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            apt-get update
+            apt-get install -y libpng-dev
       - run:
           working_directory: ~
           name: Try Building

@@ -31,7 +31,10 @@ namespace Deadblock.Engine
         {
             var tempParentType = typeof(Monster);
             var tempAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var tempImplementedTypes = tempAssemblies.SelectMany((f) => f.GetTypes()).Where((f) => tempParentType.IsAssignableFrom(f) && !f.Equals(tempParentType)).ToList();
+            var tempImplementedTypes = tempAssemblies
+                .SelectMany((f) => f.GetTypes())
+                .Where((f) => tempParentType.IsAssignableFrom(f) && !f.Equals(tempParentType))
+                .ToList();
 
             var tempMonsterType = NativeUtils.Choice<Type>(tempImplementedTypes);
             return (Monster)Activator.CreateInstance(tempMonsterType, gameInstance);

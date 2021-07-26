@@ -20,8 +20,7 @@ namespace Deadblock.Extensions
             var tempScale = (scale == default) ? Vector2.One : scale;
             var tempEffects = (effects == default) ? SpriteEffects.None : effects;
 
-            anInstance.Draw(
-                    texture: texture,
+            anInstance.Draw(texture: texture,
                     position: position,
                     color: color,
                     rotation: rotation,
@@ -29,8 +28,7 @@ namespace Deadblock.Extensions
                     origin: tempOrigin,
                     layerDepth: layerDepth,
                     sourceRectangle: sourceRectangle,
-                    effects: tempEffects
-                    );
+                    effects: tempEffects);
         }
 
         public static void Draw(this SpriteBatch anInstance,
