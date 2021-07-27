@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Deadblock.Tools
 {
@@ -144,42 +144,53 @@ namespace Deadblock.Tools
         }
 
         /// <summary>
-        /// Spits a string into a dictionary.
-        /// For Example:
-        ///
-        /// "variant: super;" with splitter ':' and anEnd ';'
-        /// will be parsed into { variant: super }
+        /// Checks the specified boolean,
+        /// and returns 1 if boolean is true
+        /// and 0 if boolean is false.
         /// </summary>
-        /// <param name="aTarget">
-        /// String that's going to be deconstructed.
-        /// </param>
-        /// <param name="aSplitter">
-        /// Split char (:)
-        /// Example: hello: world.
-        /// </param>
-        /// <param name="anEnd">
-        /// End char (;)
-        /// Example: hello: world; hello2: there;
-        /// </param>
-        public static Dictionary<string, string> SplitStringIntoDict(string aTarget, char aSplitter = ':', char anEnd = ';')
+        public static int ParseBooleanToDirection(bool aTarget)
         {
-            var tempStorage = new Dictionary<string, string>();
-            var entries = aTarget.Split(anEnd).Select((f) => f.Trim());
+            return aTarget ? 1 : -1;
+        }
 
-            foreach (string entry in entries)
-            {
-                if (string.IsNullOrEmpty(entry)) continue;
+        /// <summary>
+        /// Returns current timestamp,
+        /// represented in unix-time.
+        /// </summary>
+        public static long GetTime()
+        {
+            return DateTimeOffset.Now.ToUnixTimeSeconds() * 1000;
+        }
 
-                string[] pair = entry.Trim().Split(aSplitter).Select((f) => f.Trim()).ToArray();
-                if (pair.Length != 2)
-                {
-                    throw new AggregateException($"Could not split pair, as it contains more than one separator: { entry }");
-                }
+        /// <summary>
+        /// Creates texture of a rectangle.
+        /// </summary>
+        /// <param name="aGame">
+        /// Instance of the targeted game process.
+        /// </param>
+        /// <param name="someDimensions">
+        /// Dimensions of the rectangle texture.
+        /// </param>
+        /// <param name="aColor">
+        /// Requested color for the texture.
+        /// </param>
+        /// <returns>
+        /// Texture2D with custom-filled pixels,
+        /// based on the specified color and dimensions.
+        /// </returns>
+        public static Texture2D ConstructRectangle(GameProcess aGame, Vector2 someDimensions, Color aColor)
+        {
+            var tempWidth = (int)someDimensions.X;
+            var tempHeight = (int)someDimensions.Y;
 
-                tempStorage.Add(pair[0], pair[1]);
-            }
+            Color[] pixelsData = new Color[tempWidth * tempHeight];
+            Texture2D rectTexture = new Texture2D(aGame.GraphicsDevice, tempWidth, tempHeight);
 
-            return tempStorage;
+            for (var ma = 0; ma < pixelsData.Length; ++ma)
+                pixelsData[ma] = aColor;
+
+            rectTexture.SetData(pixelsData);
+            return rectTexture;
         }
     }
 }

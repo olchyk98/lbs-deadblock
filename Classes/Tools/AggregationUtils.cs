@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Deadblock.Tools
 {
@@ -35,7 +36,7 @@ namespace Deadblock.Tools
                     throw new AggregateException("Specified value contains no valid separator. The parts should be separated with '>'. For example, Default > Earth. Contact DEV.");
                 }
 
-                return NativeUtils.SplitStringIntoDict(aValue, '>');
+                return SplitStringIntoDict(aValue, '>');
             }
 
             // Simple Generic Type
@@ -78,6 +79,45 @@ namespace Deadblock.Tools
             }
 
             return immediateInstance;
+        }
+
+        /// <summary>
+        /// Spits a string into a dictionary.
+        /// For Example:
+        ///
+        /// "variant: super;" with splitter ':' and anEnd ';'
+        /// will be parsed into { variant: super }
+        /// </summary>
+        /// <param name="aTarget">
+        /// String that's going to be deconstructed.
+        /// </param>
+        /// <param name="aSplitter">
+        /// Split char (:)
+        /// Example: hello: world.
+        /// </param>
+        /// <param name="anEnd">
+        /// End char (;)
+        /// Example: hello: world; hello2: there;
+        /// </param>
+        public static Dictionary<string, string> SplitStringIntoDict(string aTarget, char aSplitter = ':', char anEnd = ';')
+        {
+            var tempStorage = new Dictionary<string, string>();
+            var entries = aTarget.Split(anEnd).Select((f) => f.Trim());
+
+            foreach (string entry in entries)
+            {
+                if (string.IsNullOrEmpty(entry)) continue;
+
+                string[] pair = entry.Trim().Split(aSplitter).Select((f) => f.Trim()).ToArray();
+                if (pair.Length != 2)
+                {
+                    throw new AggregateException($"Could not split pair, as it contains more than one separator: { entry }");
+                }
+
+                tempStorage.Add(pair[0], pair[1]);
+            }
+
+            return tempStorage;
         }
     }
 }

@@ -5,7 +5,7 @@ using Deadblock.Tools;
 
 namespace Deadblock.Logic
 {
-    public class Player : DrawableEntity
+    public class Player : RototableEntity
     {
         public PlayerBag Bag { get; private set; }
 
@@ -15,6 +15,9 @@ namespace Deadblock.Logic
             ConnectInput();
 
             SetSpeed(3);
+            SetStrength(10);
+            SetAttackRange(100);
+            SetAttackSpeed(500);
 
             Bag = new PlayerBag(gameInstance);
         }
@@ -33,37 +36,6 @@ namespace Deadblock.Logic
 
             var tempNextPosition = new Vector2(tempX, tempY);
             SetPosition(tempNextPosition);
-        }
-
-        /// <summary>
-        /// Sets player sprite according
-        /// to the movement direction.
-        /// </summary>
-        protected void UpdateSprite()
-        {
-            if (Direction.X == 1)
-            {
-                SetSpriteVariant("Right");
-                return;
-            }
-
-            if (Direction.X == -1)
-            {
-                SetSpriteVariant("Left");
-                return;
-            }
-
-            if (Direction.Y == 1)
-            {
-                SetSpriteVariant("Down");
-                return;
-            }
-
-            if (Direction.Y == -1)
-            {
-                SetSpriteVariant("Up");
-                return;
-            }
         }
 
         /// <summary>
@@ -89,6 +61,35 @@ namespace Deadblock.Logic
         }
 
         /// <summary>
+        /// Interacts with nearby entities.
+        /// </summary>
+        /// <returns>
+        /// Returns false if there are no
+        /// other entities in the interaction range.
+        /// </returns>
+        protected bool InteractWithEntities()
+        {
+            var nearestMonster = gameInstance.World.GetNearestMonster(Position, AttackRange);
+            if (nearestMonster == null) return false;
+
+            AttackEntity(nearestMonster);
+            return true;
+        }
+
+        /// <summary>
+        /// Searches for the nearby entities,
+        /// to interact with them.
+        /// If there are no other entities,
+        /// tries to interact with nearby environment,
+        /// such as block and block-like entities.
+        /// </summary>
+        protected void InteractWithWorld()
+        {
+            if (!InteractWithEntities())
+                InteractWithEnvironment();
+        }
+
+        /// <summary>
         /// Assigns listeners
         /// to the input handler to
         /// give user the ability
@@ -96,39 +97,21 @@ namespace Deadblock.Logic
         /// </summary>
         protected void ConnectInput()
         {
-            Action<Vector2> Move = (direction) =>
-            {
-                MoveEntity(direction);
-                UpdateSprite();
-            };
+            Action<Vector2> Move = (direction) => MoveEntity(direction);
 
-            gameInstance.InputSystem.OnMoveUp.Subscribe((bool isActive) =>
-            {
-                Move(new Vector2(0, -1));
-            });
+            //////////////////////
 
-            gameInstance.InputSystem.OnMoveRight.Subscribe((bool isActive) =>
-            {
-                Move(new Vector2(1, 0));
-            });
+            gameInstance.InputSystem.OnMoveUp.Subscribe((bool isActive) => Move(new Vector2(0, -1)));
 
-            gameInstance.InputSystem.OnMoveDown.Subscribe((bool isActive) =>
-            {
-                Move(new Vector2(0, 1));
-            });
+            gameInstance.InputSystem.OnMoveRight.Subscribe((bool isActive) => Move(new Vector2(1, 0)));
 
-            gameInstance.InputSystem.OnMoveLeft.Subscribe((bool isActive) =>
-            {
-                Move(new Vector2(-1, 0));
-            });
+            gameInstance.InputSystem.OnMoveDown.Subscribe((bool isActive) => Move(new Vector2(0, 1)));
 
-            gameInstance.InputSystem.OnRegularUse.Subscribe((bool isActive) =>
-            {
-                InteractWithEnvironment();
-            });
+            gameInstance.InputSystem.OnMoveLeft.Subscribe((bool isActive) => Move(new Vector2(-1, 0)));
+
+            //////////////////////
+
+            gameInstance.InputSystem.OnRegularUse.Subscribe((bool isActive) => InteractWithWorld());
         }
-
-        public override void Update()
-        { }
     }
 }

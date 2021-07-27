@@ -10,7 +10,8 @@ namespace Deadblock.Engine
 {
     public class World : DeliveredGameSlot
     {
-        public Player myMainPlayer { get; private set; }
+        public Player MainPlayer { get; private set; }
+        public MonsterSpawner MonsterSpawner { get; private set; }
 
         // NOTE: This thing, could potentially be
         // improved using a container with matrixPosition
@@ -18,18 +19,17 @@ namespace Deadblock.Engine
         // to handle layers.
         private ISpriteBlock[,,] myMap;
         private WorkerTexture[] myMapTextures;
-        private MonstersSpawner myMonstersSpawner;
 
         private List<DrawableEntity> myEntities;
 
         private static string[] MapReferenceLayerPaths = new string[] {
-            @"./Content/Levels/TheMain/ground.txt",
-            @"./Content/Levels/TheMain/interactable.txt"
-        };
+      @"./Content/Levels/TheMain/ground.txt",
+      @"./Content/Levels/TheMain/interactable.txt"
+    };
 
         public World(GameProcess aGame) : base(aGame)
         {
-            myMonstersSpawner = new MonstersSpawner(aGame);
+            MonsterSpawner = new MonsterSpawner(aGame);
 
             LoadMap();
             InstantiateEntities();
@@ -101,7 +101,7 @@ namespace Deadblock.Engine
                     tempType,
                     gameInstance,
                     tempSpec.Name
-                );
+                    );
             }
             else
             {
@@ -126,8 +126,8 @@ namespace Deadblock.Engine
         private WorkerTexture GetEnvTexture(char anId)
         {
             return myMapTextures
-                .ToList()
-                .Find((f) => f.ID == anId);
+              .ToList()
+              .Find((f) => f.ID == anId);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Deadblock.Engine
             ////////////////////////
 
             myEntities.Add(player);
-            myMainPlayer = player;
+            MainPlayer = player;
         }
 
         /// <summary>
@@ -233,18 +233,24 @@ namespace Deadblock.Engine
 
         /// <summary>
         /// May potentially spawn
-        /// monsters by calling the spawner.
+        /// monster by calling the spawner.
         /// </summary>
         /// <returns>
-        /// True, if any new
-        /// monsters were summoned.
+        /// True, if a new
+        /// monster was summoned.
         /// </returns>
-        private bool SpawnMonsters()
+        private bool SpawnMonster()
         {
-            Monster[] tempNewMonsters = myMonstersSpawner.ProcessSpawnTick();
-            if (tempNewMonsters.Length <= 0) return false;
+            Monster tempNewMonster = MonsterSpawner.ProcessSpawnTick();
+            if (tempNewMonster == null) return false;
 
-            myEntities = myEntities.Concat(tempNewMonsters.ToList()).ToList();
+            //////////////////
+
+            tempNewMonster.OnDie.Subscribe(() => myEntities.Remove(tempNewMonster));
+
+            //////////////////
+
+            myEntities.Add(tempNewMonster);
             return true;
         }
 
@@ -254,7 +260,6 @@ namespace Deadblock.Engine
         /// </summary>
         public void Draw()
         {
-
             RenderMap();
             RenderEntities();
         }
@@ -265,7 +270,7 @@ namespace Deadblock.Engine
         /// </summary>
         public void Update()
         {
-            SpawnMonsters();
+            SpawnMonster();
             UpdateEntities();
         }
 
@@ -298,7 +303,7 @@ namespace Deadblock.Engine
             var isOutBounds = (
                 tempMatrixY < 0 || tempMatrixY > myMap.GetLength(1) - 1
                 || tempMatrixX < 0 || tempMatrixX > myMap.GetLength(2) - 1
-            );
+                );
 
             if (isOutBounds) return new ISpriteBlock[] { };
 
@@ -318,6 +323,42 @@ namespace Deadblock.Engine
             //////////////////////////
 
             return tempBlocks.ToArray();
+        }
+
+        /// <summary>
+        /// Returns nearest monsters
+        /// to the specified position.
+        /// </summary>
+        /// <param name="aPosition">
+        /// Origo position for the algorithm.
+        /// </param>
+        /// <param name="aRange">
+        /// Detection range for the algorithm.
+        /// </param>
+        /// <returns>
+        /// A monster that is positioned the
+        /// neariest to the origo point.
+        /// Will return null if there is not monster nearby.
+        /// </returns>
+        public Monster GetNearestMonster(Vector2 aPosition, int aRange)
+        {
+            Monster tempMonster = null;
+            int tempNearestDistance = default;
+
+            foreach (var entity in myEntities)
+            {
+                if (!(entity is Monster)) continue;
+                var tempEntityDistance = (int)Vector2.Distance(entity.Position, aPosition);
+
+                if (tempMonster == null
+                    || tempEntityDistance < tempNearestDistance)
+                {
+                    tempMonster = entity as Monster;
+                    tempNearestDistance = tempEntityDistance;
+                }
+            }
+
+            return (tempNearestDistance <= aRange) ? tempMonster : null;
         }
     }
 }

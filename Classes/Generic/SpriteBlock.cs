@@ -16,8 +16,10 @@ namespace Deadblock.Generic
 
     public class SpriteBlock : DeliveredGameSlot, ISpriteBlock
     {
-        private WorkerTexture myTextureSpec;
         public bool HasCollider { get; } = false;
+        public float Brightness { get; private set; } = 1f;
+
+        private WorkerTexture myTextureSpec;
         private string myCurrentTextureKey = "Default";
 
         public SpriteBlock(GameProcess aGame, string aTextureKey) : base(aGame)
@@ -100,6 +102,9 @@ namespace Deadblock.Generic
                 throw new AggregateException($"Tried to set an invalid sprite variant: {aVariant} for texture {myTextureSpec.Name}");
             }
 
+            // Prevent an extra observer/sys-call.
+            if (myCurrentTextureKey == aVariant) return;
+
             myCurrentTextureKey = aVariant;
         }
 
@@ -134,7 +139,9 @@ namespace Deadblock.Generic
 
             var tempTexture = GetActiveTexture();
             var tempPosition = (isRelative) ? GetRelativePosition(aPosition) : aPosition;
-            gameInstance.SpriteBatch.Draw(tempTexture, tempPosition, Color.White);
+
+            var tempColor = Color.White * Brightness;
+            gameInstance.SpriteBatch.Draw(tempTexture, tempPosition, tempColor);
         }
 
         /// <summary>
@@ -148,8 +155,23 @@ namespace Deadblock.Generic
         public Vector2 GetDimensions()
         {
             var tempRawTexture = GetActiveTexture();
-
             return new Vector2(tempRawTexture.Width, tempRawTexture.Width);
+        }
+
+        /// <summary>
+        /// Sets texture brightness,
+        /// prevents it to go over 1.
+        /// </summary>
+        /// <returns>
+        /// The new brightness value.
+        /// </returns>
+        public float SetBrightness(float aValue)
+        {
+            if (aValue > 1f) Brightness = 1f;
+            else if (aValue < 0f) Brightness = 0f;
+            else Brightness = aValue;
+
+            return Brightness;
         }
     }
 }
