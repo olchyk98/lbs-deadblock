@@ -9,25 +9,38 @@ namespace Deadblock.Engine
     {
         public Vector2 Position { get; private set; }
         public Vector2 Direction { get; private set; }
+
         public int Speed { get; private set; }
+        public int Strength { get; private set; }
+        public int AttackRange { get; private set; }
+        public int AttackSpeed { get; private set; } // ms
+
+        private long myLastAttackTime = 0;
+
         public float Health { get; private set; }
         public float MaxHealth { get; }
-        public bool isActive { get; private set; }
+
+        public UniversalEvent OnDie { get; private set; }
 
         public Entity(GameProcess aGame, float someMaxHealth, float someHealth = default) : base(aGame)
         {
             Health = (someHealth != default) ? someHealth : someMaxHealth;
             MaxHealth = someMaxHealth;
             Position = new Vector2(0, 0);
-            Speed = 1;
-            isActive = true;
             Direction = new Vector2(0, -1);
+
+            Speed = 0;
+            Strength = 0;
+            AttackRange = 0;
+            AttackSpeed = 0;
+
+            OnDie = new UniversalEvent();
         }
 
         /// <summary>
         /// Sets health to fullhealth.
         /// </summary>
-        private void SetFullHealth()
+        private void ResetHealth()
         {
             Health = MaxHealth;
         }
@@ -40,7 +53,7 @@ namespace Deadblock.Engine
         /// Number of health points
         /// that health will be reduced with.
         /// </param>
-        private void ApplyDamage(float someDamage)
+        public virtual void ApplyDamage(float someDamage)
         {
             if (someDamage < 0)
             {
@@ -48,6 +61,11 @@ namespace Deadblock.Engine
             }
 
             Health -= someDamage;
+
+            if (Health < 0)
+            {
+                OnDie.Invoke();
+            }
         }
 
         /// <summary>
@@ -73,19 +91,19 @@ namespace Deadblock.Engine
         /// Also rotates entity to the specified direction,
         /// inherited from the force value.
         /// </summary>
-        /// <param name="aForce">
-        /// Targeted force.
+        /// <param name="aDirection">
+        /// Targeted direction.
         /// </param>
         /// <returns>
         /// New Position of the entity.
         /// </returns>
-        public Vector2 MoveEntity(Vector2 aForce)
+        public Vector2 MoveEntity(Vector2 aDirection)
         {
-            Direction = aForce;
+            Direction = aDirection;
 
             //////////////////
 
-            var tempNextPosition = Position + aForce * Speed;
+            var tempNextPosition = Position + aDirection * Speed;
 
             //////////////////
 
@@ -140,12 +158,110 @@ namespace Deadblock.Engine
         /// Speed value.
         /// </param>
         /// <returns>
-        /// New speed of the entity.
+        /// New speed for the entity.
         /// </returns>
         public int SetSpeed(int someSpeed)
         {
             Speed = someSpeed;
             return Speed;
+        }
+
+        /// <summary>
+        /// Sets strength
+        /// for the tntiy
+        /// </summary>
+        /// <param name="someStrength">
+        /// Strength value.
+        /// </param>
+        /// <returns>
+        /// New strength for the entity.
+        /// </returns>
+        public int SetStrength(int someStrength)
+        {
+            Strength = someStrength;
+            return Strength;
+        }
+
+        /// <summary>
+        /// Sets attack range
+        /// for the entity.
+        /// </summary>
+        /// <param name="someAttackRange">
+        /// Attack range value.
+        /// </param>
+        /// <returns>
+        /// New attack range value
+        /// for the entity.
+        /// </returns>
+        public int SetAttackRange(int someAttackRange)
+        {
+            AttackRange = someAttackRange;
+            return someAttackRange;
+        }
+
+        /// <summary>
+        /// Sets attack speed
+        /// for the entity.
+        /// </summary>
+        /// <param name="someAttackRange">
+        /// Attack speed value.
+        /// </param>
+        /// <returns>
+        /// New attack speed value
+        /// for the entity.
+        /// </returns>
+        public int SetAttackSpeed(int someAttackSpeed)
+        {
+            AttackSpeed = someAttackSpeed;
+            return someAttackSpeed;
+        }
+
+        /// <summary>
+        /// Sets direction to the target
+        /// entity, and moves to it.
+        /// </summary>
+        /// <param name="aTarget">
+        /// Entity that needs to be targeted.
+        /// </param>
+        public void MoveTowards(Entity aTarget)
+        {
+            var tempDirection = new Vector2(0, 0);
+            var tempTargetPosition = aTarget.Position;
+
+            if (tempTargetPosition.X != Position.X)
+                tempDirection.X = NativeUtils.ParseBooleanToDirection(tempTargetPosition.X > Position.X);
+
+            if (tempTargetPosition.Y != Position.Y)
+                tempDirection.Y = NativeUtils.ParseBooleanToDirection(tempTargetPosition.Y > Position.Y);
+
+            MoveEntity(tempDirection);
+        }
+
+        /// <summary>
+        /// Attacks the specified target entity.
+        /// </summary>
+        /// <returns>
+        /// True, if monster
+        /// is in the attack range.
+        /// It will return true,
+        /// even if the entity didn't actually attack,
+        /// for example, if there's still attack cooldown active.
+        /// </returns>
+        public bool AttackEntity(Entity aTarget)
+        {
+            var tempDistanceToTarget = (int)Vector2.Distance(Position, aTarget.Position);
+
+            // Guards
+            if (tempDistanceToTarget > AttackRange)
+                return false;
+
+            if (NativeUtils.GetTime() <= myLastAttackTime + AttackSpeed)
+                return true;
+
+            // Execution
+            aTarget.ApplyDamage(Strength);
+            myLastAttackTime = NativeUtils.GetTime();
+            return true;
         }
     }
 }

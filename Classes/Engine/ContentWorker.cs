@@ -67,7 +67,7 @@ namespace Deadblock.Engine
         {
             if (!mySources.ContainsKey(aSourceName))
             {
-                throw new ArgumentException($"Provided invalid source name for the content worker. Ensure that source with name {aSourceName} was provided to the storage.");
+                throw new ArgumentException($"Provided invalid source name for the content worker. Ensure that source with name {aSourceName} is registered in the storage.");
             }
 
             return mySources[aSourceName];

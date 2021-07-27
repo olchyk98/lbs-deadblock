@@ -16,7 +16,7 @@ namespace Deadblock.GUI
 
         public override void Update()
         {
-            var nOfTrees = gameInstance.World.myMainPlayer.Bag.Trees;
+            var nOfTrees = gameInstance.World.MainPlayer.Bag.Trees;
             myCurrentValue = nOfTrees.ToString();
 
             base.Update();
