@@ -27,6 +27,10 @@ namespace Deadblock
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            myGraphics.IsFullScreen = true;
+            myGraphics.PreferredBackBufferWidth = 940;
+            myGraphics.PreferredBackBufferHeight = 540;
         }
 
         override protected void Initialize()

@@ -23,9 +23,9 @@ namespace Deadblock.Engine
         private List<DrawableEntity> myEntities;
 
         private static string[] MapReferenceLayerPaths = new string[] {
-      @"./Content/Levels/TheMain/ground.txt",
-      @"./Content/Levels/TheMain/interactable.txt"
-    };
+            @"./Content/Levels/TheMain/ground.txt",
+                @"./Content/Levels/TheMain/interactable.txt"
+        };
 
         public World(GameProcess aGame) : base(aGame)
         {
@@ -98,10 +98,10 @@ namespace Deadblock.Engine
                 }
 
                 tempInstance = (ISpriteBlock)Activator.CreateInstance(
-                    tempType,
-                    gameInstance,
-                    tempSpec.Name
-                    );
+                        tempType,
+                        gameInstance,
+                        tempSpec.Name
+                        );
             }
             else
             {
@@ -126,8 +126,8 @@ namespace Deadblock.Engine
         private WorkerTexture GetEnvTexture(char anId)
         {
             return myMapTextures
-              .ToList()
-              .Find((f) => f.ID == anId);
+                .ToList()
+                .Find((f) => f.ID == anId);
         }
 
         /// <summary>
@@ -301,9 +301,9 @@ namespace Deadblock.Engine
             //////////////////////////
 
             var isOutBounds = (
-                tempMatrixY < 0 || tempMatrixY > myMap.GetLength(1) - 1
-                || tempMatrixX < 0 || tempMatrixX > myMap.GetLength(2) - 1
-                );
+                    tempMatrixY < 0 || tempMatrixY > myMap.GetLength(1) - 1
+                    || tempMatrixX < 0 || tempMatrixX > myMap.GetLength(2) - 1
+                    );
 
             if (isOutBounds) return new ISpriteBlock[] { };
 
@@ -351,7 +351,7 @@ namespace Deadblock.Engine
                 var tempEntityDistance = (int)Vector2.Distance(entity.Position, aPosition);
 
                 if (tempMonster == null
-                    || tempEntityDistance < tempNearestDistance)
+                        || tempEntityDistance < tempNearestDistance)
                 {
                     tempMonster = entity as Monster;
                     tempNearestDistance = tempEntityDistance;
