@@ -24,7 +24,7 @@ namespace Deadblock.Engine
 
         private static string[] MapReferenceLayerPaths = new string[] {
             @"./Content/Levels/TheMain/ground.txt",
-                @"./Content/Levels/TheMain/interactable.txt"
+            @"./Content/Levels/TheMain/interactable.txt"
         };
 
         public World(GameProcess aGame) : base(aGame)

@@ -43,3 +43,9 @@ DrawPositionMode: ORIGINAL_POINT
 ResizeMode: SCALE_FULL
 ActiveInstanceName: Deadblock.Logic.WaterStream
 ----------------------------
+ID: 8
+Name: env/vertical-bridge
+Paths: Default > ./Content/Sprites/Environment/Ground/VerticalBridge.png
+ResizeMode: SCALE_FULL
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
