@@ -42,12 +42,12 @@ namespace Deadblock.Engine
                 MoveTowards(tempTarget);
         }
 
-        public override void Draw()
+        override public void Draw()
         {
             base.Draw();
         }
 
-        public override void Update()
+        override public void Update()
         {
             DoThink();
             base.Update();

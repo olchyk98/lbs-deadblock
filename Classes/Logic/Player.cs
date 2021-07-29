@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Deadblock.Engine;
 using Deadblock.Tools;
 
 namespace Deadblock.Logic
@@ -13,20 +14,30 @@ namespace Deadblock.Logic
         {
             PlaceEntity();
             ConnectInput();
+            SetupHeadBars();
+            InitializeBag();
 
             SetSpeed(3);
             SetStrength(10);
             SetAttackRange(100);
             SetAttackSpeed(500);
 
+            OnDie.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_LOST));
+        }
+
+        private void InitializeBag()
+        {
             Bag = new PlayerBag(gameInstance);
+
+            Bag.OnWaterExpired.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_LOST));
+            Bag.OnAllTreesCollected.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_WON));
         }
 
         /// <summary>
         /// Places player on
         /// the default position in the world.
         /// </summary>
-        protected void PlaceEntity()
+        private void PlaceEntity()
         {
             var tempScreenSize = NativeUtils.GetScreenCenterPosition(gameInstance);
             var tempDimensions = Texture.GetDimensions();
@@ -39,10 +50,20 @@ namespace Deadblock.Logic
         }
 
         /// <summary>
+        /// Setups setup active
+        /// bars for the player.
+        /// </summary>
+        private void SetupHeadBars()
+        {
+            var tempThirstBar = new ThirstBar(gameInstance, this);
+            RegisterHeadBar(tempThirstBar);
+        }
+
+        /// <summary>
         /// Interacts with all blocks
         /// that are in front of the player.
         /// </summary>
-        protected void InteractWithEnvironment()
+        private void InteractWithEnvironment()
         {
             var currentPosition = Position;
             var forwardPosition = Position + Direction * GameGlobals.SCREEN_BLOCK_SIZE;
@@ -67,7 +88,7 @@ namespace Deadblock.Logic
         /// Returns false if there are no
         /// other entities in the interaction range.
         /// </returns>
-        protected bool InteractWithEntities()
+        private bool InteractWithEntities()
         {
             var nearestMonster = gameInstance.World.GetNearestMonster(Position, AttackRange);
             if (nearestMonster == null) return false;
@@ -83,7 +104,7 @@ namespace Deadblock.Logic
         /// tries to interact with nearby environment,
         /// such as block and block-like entities.
         /// </summary>
-        protected void InteractWithWorld()
+        private void InteractWithWorld()
         {
             if (!InteractWithEntities())
                 InteractWithEnvironment();
@@ -95,7 +116,7 @@ namespace Deadblock.Logic
         /// give user the ability
         /// to control the player.
         /// </summary>
-        protected void ConnectInput()
+        private void ConnectInput()
         {
             Action<Vector2> Move = (direction) => MoveEntity(direction);
 
@@ -112,6 +133,12 @@ namespace Deadblock.Logic
             //////////////////////
 
             gameInstance.InputSystem.OnRegularUse.Subscribe((bool isActive) => InteractWithWorld());
+        }
+
+        override public void Update()
+        {
+            Bag.Update();
+            base.Update();
         }
     }
 }

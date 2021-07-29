@@ -1,24 +1,22 @@
-using System;
+using System.Collections.Generic;
 using Deadblock.Generic;
 using Deadblock.Engine;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Deadblock.Tools;
-using Deadblock.Extensions;
 
 namespace Deadblock.Logic
 {
     public abstract class DrawableEntity : Entity, IDrawable
+
     {
         public SpriteBlock Texture { get; private set; }
-        private Texture2D myHealthBarTexture;
+        private List<HeadBar> myHeadBars;
 
-        private readonly static float BrightnessPerTick = .01f;
+        private readonly static float AlphaPerTick = .01f;
+        private readonly static int HeadBarsMargin = 5;
 
         public DrawableEntity(GameProcess aGame, string aTextureName, float someHealth) : base(aGame, someHealth)
         {
             InitializeTexture(aTextureName);
-            InitializeHealthBar();
+            InitializeHeadBars();
         }
 
         /// <summary>
@@ -27,17 +25,46 @@ namespace Deadblock.Logic
         private void InitializeTexture(string aTextureName)
         {
             Texture = new SpriteBlock(gameInstance, aTextureName);
-            Texture.SetBrightness(1f);
+            Texture.SetAlpha(1f);
         }
 
         /// <summary>
-        /// Creates a texture for the health bar.
+        /// Setups a new list head bars.
         /// </summary>
-        private void InitializeHealthBar()
+        private void InitializeHeadBars()
         {
-            myHealthBarTexture = NativeUtils.ConstructRectangle(gameInstance,
-                someDimensions: new Vector2(60, 10),
-                Color.Red);
+            var tempHealthBar = new HealthBar(gameInstance, this);
+
+            ////////////
+
+            myHeadBars = new List<HeadBar>();
+            myHeadBars.Add(tempHealthBar);
+        }
+
+        /// <summary>
+        /// Adds head bar to the pipeline.
+        /// The added head bar will be directly rendered.
+        /// </summary>
+        /// <param name="aHeadbar">
+        /// Targeted head bar.
+        /// </param>
+        public List<HeadBar> RegisterHeadBar(HeadBar aHeadbar)
+        {
+            myHeadBars.Add(aHeadbar);
+            return myHeadBars;
+        }
+
+        /// <summary>
+        /// Removes head bar from the pipeline.
+        /// The remove head bar will be directly removed.
+        /// </summary>
+        /// <param name="aHeadbar">
+        /// Targeted head bar.
+        /// </param>
+        public List<HeadBar> RemoveHeadBar(HeadBar aHeadbar)
+        {
+            myHeadBars.Remove(aHeadbar);
+            return myHeadBars;
         }
 
         /// <summary>
@@ -55,40 +82,40 @@ namespace Deadblock.Logic
         /// Draws object on the screen
         /// on its position.
         /// </summary>
-        public virtual void Draw()
+        virtual public void Draw()
         {
             Texture.Render(Position);
-            DrawHealthBar();
+            DrawHeadBars();
         }
 
-        public virtual void Update()
+        virtual public void Update()
         {
-            if (Texture.Brightness < 1f)
-                Texture.SetBrightness(Texture.Brightness + BrightnessPerTick);
+            if (Texture.Alpha < 1f)
+                Texture.SetAlpha(Texture.Alpha + AlphaPerTick);
         }
 
         /// <summary>
-        /// Draws healthbar for
+        /// Draws bars for
         /// the entity on canvas.
         /// </summary>
-        public void DrawHealthBar()
+        public void DrawHeadBars()
         {
-            var tempTextureSize = Texture.GetDimensions();
-            var tempPosition = new Vector2(Position.X + tempTextureSize.X / 2 - myHealthBarTexture.Width / 2,
-                Position.Y - myHealthBarTexture.Height - 3);
+            int renderedPixelsY = 0;
 
-            var tempHealthStat = Math.Clamp(Health / MaxHealth, 0, 1);
-            var tempScale = new Vector2(tempHealthStat, 1);
+            for (var ma = 0; ma < myHeadBars.Count; ++ma)
+            {
+                HeadBar tempHeadBar = myHeadBars[ma];
 
-            gameInstance.SpriteBatch.Draw(myHealthBarTexture,
-                tempPosition,
-                Color.White,
-                scale: tempScale);
+                int tempBarHeight = (int)tempHeadBar.GetDimensions().Y;
+                renderedPixelsY = renderedPixelsY + HeadBarsMargin + tempBarHeight;
+
+                tempHeadBar.Draw(renderedPixelsY);
+            }
         }
 
-        public override void ApplyDamage(float someDamage)
+        override public void ApplyDamage(float someDamage)
         {
-            Texture.SetBrightness(.4f);
+            Texture.SetAlpha(.4f);
             base.ApplyDamage(someDamage);
         }
     }

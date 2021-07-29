@@ -53,7 +53,7 @@ namespace Deadblock.Engine
         /// Number of health points
         /// that health will be reduced with.
         /// </param>
-        public virtual void ApplyDamage(float someDamage)
+        virtual public void ApplyDamage(float someDamage)
         {
             if (someDamage < 0)
             {
@@ -250,17 +250,18 @@ namespace Deadblock.Engine
         public bool AttackEntity(Entity aTarget)
         {
             var tempDistanceToTarget = (int)Vector2.Distance(Position, aTarget.Position);
+            var tempCurrentTime = NativeUtils.GetTime();
 
             // Guards
             if (tempDistanceToTarget > AttackRange)
                 return false;
 
-            if (NativeUtils.GetTime() <= myLastAttackTime + AttackSpeed)
+            if (tempCurrentTime <= myLastAttackTime + AttackSpeed)
                 return true;
 
             // Execution
             aTarget.ApplyDamage(Strength);
-            myLastAttackTime = NativeUtils.GetTime();
+            myLastAttackTime = tempCurrentTime;
             return true;
         }
     }

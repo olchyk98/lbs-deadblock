@@ -45,7 +45,7 @@ namespace Deadblock.Logic
             }
         }
 
-        public override void Update()
+        override public void Update()
         {
             RotateSprite();
             base.Update();

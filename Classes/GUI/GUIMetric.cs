@@ -53,7 +53,7 @@ namespace Deadblock.GUI
         /// Renders metric on the saved position.
         /// Base Method renders icon and value label.
         /// </summary>
-        public virtual void Draw()
+        virtual public void Draw()
         {
             DrawValue();
             DrawIcon();
@@ -62,7 +62,7 @@ namespace Deadblock.GUI
         /// <summary>
         /// Updates metric value.
         /// </summary>
-        public virtual void Update()
+        virtual public void Update()
         { }
     }
 }

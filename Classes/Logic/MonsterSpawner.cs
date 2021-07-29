@@ -20,7 +20,7 @@ namespace Deadblock.Engine
         /// </summary>
         private void ResetSpawnCooldown()
         {
-            myTicksToSpawn = NativeUtils.RandomizeValue(50, 400);
+            myTicksToSpawn = NativeUtils.RandomizeValue(100, 400);
         }
 
         /// <summary>
@@ -30,13 +30,27 @@ namespace Deadblock.Engine
         {
             var tempParentType = typeof(Monster);
             var tempAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            /////////////////////////
+
             var tempImplementedTypes = tempAssemblies
               .SelectMany((f) => f.GetTypes())
               .Where((f) => tempParentType.IsAssignableFrom(f) && !f.Equals(tempParentType))
               .ToList();
 
+            /////////////////////////
+
             var tempMonsterType = NativeUtils.Choice<Type>(tempImplementedTypes);
-            return (Monster)Activator.CreateInstance(tempMonsterType, gameInstance);
+            var instance = (Monster)Activator.CreateInstance(tempMonsterType, gameInstance);
+
+            //////////////////////
+
+            var tempSpawnPosition = NativeUtils.RandomizeScreenPosition(gameInstance);
+            instance.SetPosition(tempSpawnPosition);
+
+            //////////////////////
+
+            return instance;
         }
 
         /// <summary>

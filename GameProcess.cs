@@ -5,6 +5,12 @@ using Deadblock.GUI;
 
 namespace Deadblock
 {
+    public enum SessionFinishScenario
+    {
+        PLAYER_WON,
+        PLAYER_LOST,
+    }
+
     public class GameProcess : Game
     {
         private GraphicsDeviceManager myGraphics;
@@ -23,7 +29,7 @@ namespace Deadblock
             IsMouseVisible = true;
         }
 
-        protected override void Initialize()
+        override protected void Initialize()
         {
             InputSystem = new InputSystem(this);
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
@@ -33,12 +39,12 @@ namespace Deadblock
             base.Initialize();
         }
 
-        protected override void LoadContent()
+        override protected void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        protected override void Update(GameTime gameTime)
+        override protected void Update(GameTime gameTime)
         {
             InputSystem.Update();
             World.Update();
@@ -47,7 +53,7 @@ namespace Deadblock
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        override protected void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
@@ -59,6 +65,22 @@ namespace Deadblock
             SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// EndGame Routine:
+        /// Ends current session,
+        /// Shows the lose message,
+        /// and prompt with a button
+        /// to continue.
+        /// </summary>
+        /// <param name="anEnding">
+        /// Finish scenario.
+        /// </param>
+        public void EndGame(SessionFinishScenario anEnding)
+        {
+            // TODO: Implement
+            return;
         }
     }
 }
