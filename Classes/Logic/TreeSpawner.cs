@@ -1,4 +1,3 @@
-using System;
 using Deadblock.Generic;
 using Deadblock.Engine;
 using Deadblock.Tools;
@@ -20,7 +19,6 @@ namespace Deadblock.Logic
 
         override public void Render(Vector2 aPosition, bool isRelative = true)
         {
-
             base.Render(aPosition, false);
 
             if (myHasPlant)

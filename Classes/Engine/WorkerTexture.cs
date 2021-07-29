@@ -16,6 +16,7 @@ namespace Deadblock.Engine
         /// Example value: '4'
         /// </summary>
         public char ID { get; set; }
+
         /// <summary>
         /// Name of texture.
         /// Mainly used to load and
@@ -24,6 +25,7 @@ namespace Deadblock.Engine
         /// Example value: ent/player
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Absolute or Relative paths to
         /// the texture on the running machine.
@@ -36,6 +38,7 @@ namespace Deadblock.Engine
         /// Example value: TopSide: /coreusr/bart/foot.png
         /// </summary>
         public Dictionary<string, string> Paths { get; set; }
+
         /// <summary>
         /// Texture instances created
         /// from contents of the referenced file.
@@ -45,6 +48,7 @@ namespace Deadblock.Engine
         /// The first specified key will be treated as the default texture.
         /// </summary>
         public Dictionary<string, Texture2D> Textures { get; set; }
+
         /// <summary>
         /// Position mode, which decides
         /// how the texture will be placed during rendering.
@@ -69,6 +73,7 @@ namespace Deadblock.Engine
         ///  to top left.
         /// </summary>
         public DrawPositionMode DrawPositionMode { get; set; }
+
         /// <summary>
         /// Name of a ISpriteBlock implementation
         /// that should be used to render
@@ -77,6 +82,30 @@ namespace Deadblock.Engine
         /// Example value: Deadblock.Generic.Vector4
         /// </summary>
         public string ActiveInstanceName { get; set; }
+
+        /// <summary>
+        /// Decides how the sprite should be resized
+        /// during rendering.
+        ///
+        /// ORIGINAL:
+        /// Sprite won't be
+        /// resized in any way.
+        ///
+        /// SCALE_X:
+        /// Resize the X axis
+        /// so it would fit the default
+        /// block width.
+        ///
+        /// SCALE_Y:
+        /// Resize the Y axis
+        /// so it would fir the default
+        /// block height.
+        ///
+        /// SCALE_FULL:
+        /// Fully scale the sprite
+        /// to the default block size.
+        /// </summary>
+        public ResizeMode ResizeMode { get; set; }
 
         /// <summary>
         /// Returns default texture from
@@ -92,13 +121,28 @@ namespace Deadblock.Engine
         }
 
         /// <summary>
+        /// Returns an array of available
+        /// texture keys for the texture.
+        /// </summary>
+        public string[] GetAvailableTextureKeys()
+        {
+            // NOTE: Could not fix usings.
+            var tempKeys = new List<string>();
+
+            foreach (var key in Textures.Keys)
+                tempKeys.Add(key);
+
+            return tempKeys.ToArray();
+        }
+
+        /// <summary>
         /// Returns default texture key from loaded texture variants
         /// pack. May return null if the list is empty.
         /// </summary>
         public string GetDefaultTextureKey()
         {
-            var tempKeysCollection = Textures.Keys;
-            var tempKeys = new string[tempKeysCollection.Count];
+            var tempKeysCollection = GetAvailableTextureKeys();
+            var tempKeys = new string[tempKeysCollection.Length];
 
             tempKeysCollection.CopyTo(tempKeys, 0);
 

@@ -21,7 +21,7 @@ namespace Deadblock.GUI
 
             ////////////////
 
-            var treeMetric = new TreeMetric(gameInstance, new Vector2(tempScreenDimensions.X - 100f, 10f));
+            var treeMetric = new TreeMetric(gameInstance, new Vector2(tempScreenDimensions.X - 150f, 10f));
 
             ////////////////
 

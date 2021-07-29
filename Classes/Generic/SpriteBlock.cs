@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Deadblock.Logic;
 using Deadblock.Engine;
+using Deadblock.Extensions;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,13 +15,41 @@ namespace Deadblock.Generic
         ORIGINAL_POINT,
     }
 
+    public enum ResizeMode
+    {
+        ORIGINAL,
+        SCALE_X,
+        SCALE_Y,
+        SCALE_FULL
+    }
+
     public class SpriteBlock : DeliveredGameSlot, ISpriteBlock
     {
+        /// <summary>
+        /// Decides if the value should have a collider.
+        /// If the block has a collider,
+        /// entities that are present in the world
+        /// are not able to go through the block.
+        /// </summary>
         public bool HasCollider { get; } = false;
-        public float Brightness { get; private set; } = 1f;
 
-        private WorkerTexture myTextureSpec;
-        private string myCurrentTextureKey = "Default";
+        /// <summary>
+        /// Alpha modifier for the texture.
+        /// Max value is 1, Min value is 0.
+        /// </summary>
+        public float Alpha { get; private set; } = 1f;
+
+        protected WorkerTexture TextureSpec { get; private set; }
+        protected string CurrentTextureKey { get; private set; } = "Default";
+
+        /// <summary>
+        /// Additional number that will be added
+        /// in case of full resizing to fulfill
+        /// and patch extra gaps and margins between tile-blocks.
+        ///
+        /// Recommended value according to the documentation is 0.1.
+        /// </summary>
+        private readonly static float ScaleStabilityValue = .1f;
 
         public SpriteBlock(GameProcess aGame, string aTextureKey) : base(aGame)
         {
@@ -36,11 +65,11 @@ namespace Deadblock.Generic
         /// </param>
         private void LoadTexture(string aTextureKey)
         {
-            myTextureSpec = gameInstance.GameContents.GetTexture(aTextureKey);
+            TextureSpec = gameInstance.GameContents.GetTexture(aTextureKey);
 
-            if (!myTextureSpec.Textures.ContainsKey(myCurrentTextureKey))
+            if (!TextureSpec.Textures.ContainsKey(CurrentTextureKey))
             {
-                throw new FormatException($"Loaded texture does not have the default texture. Texture name: { myTextureSpec.Name }. Contact DEV.");
+                throw new FormatException($"Loaded texture does not have the default texture. Texture name: { TextureSpec.Name }. Contact DEV.");
             }
         }
 
@@ -67,7 +96,7 @@ namespace Deadblock.Generic
             int x = (int)aPosition.X;
             int y = (int)aPosition.Y;
 
-            switch (myTextureSpec.DrawPositionMode)
+            switch (TextureSpec.DrawPositionMode)
             {
                 case DrawPositionMode.CENTER_TO_POINT:
                     {
@@ -90,6 +119,46 @@ namespace Deadblock.Generic
         }
 
         /// <summary>
+        /// Calculates appliable scale for the texture
+        /// so it would satisfy specified ResizeMode.
+        /// </summary>
+        /// <param name="aTexture">
+        /// Targeted texture.
+        /// </param>
+        /// <returns>
+        /// Scale modifiers,
+        /// represented as 2D Vector.
+        /// </returns>
+        private Vector2 GetRelativeScale(Texture2D aTexture)
+        {
+            var tempWidth = aTexture.Width;
+            var tempHeight = aTexture.Height;
+            var tempBlockSize = GameGlobals.SCREEN_BLOCK_SIZE;
+
+            Func<float> getScaleX = () => tempBlockSize / tempWidth;
+            Func<float> getScaleY = () => tempBlockSize / tempHeight;
+
+            switch (TextureSpec.ResizeMode)
+            {
+                case ResizeMode.SCALE_X:
+                    {
+                        return new Vector2(getScaleX(), 1);
+                    }
+                case ResizeMode.SCALE_Y:
+                    {
+                        return new Vector2(getScaleY(), 1);
+                    }
+                case ResizeMode.SCALE_FULL:
+                    {
+                        return new Vector2(getScaleY() + ScaleStabilityValue, getScaleY() + ScaleStabilityValue);
+                    }
+                default:
+                case ResizeMode.ORIGINAL:
+                    return Vector2.One;
+            }
+        }
+
+        /// <summary>
         /// Sets variant key,
         /// that is used to decide which
         /// texture will be rendered.
@@ -97,15 +166,15 @@ namespace Deadblock.Generic
         /// </summary>
         public void SetTextureVariant(string aVariant = "Default")
         {
-            if (!myTextureSpec.Textures.ContainsKey(aVariant))
+            if (!TextureSpec.Textures.ContainsKey(aVariant))
             {
-                throw new AggregateException($"Tried to set an invalid sprite variant: {aVariant} for texture {myTextureSpec.Name}");
+                throw new AggregateException($"Tried to set an invalid sprite variant: {aVariant} for texture {TextureSpec.Name}");
             }
 
             // Prevent an extra observer/sys-call.
-            if (myCurrentTextureKey == aVariant) return;
+            if (CurrentTextureKey == aVariant) return;
 
-            myCurrentTextureKey = aVariant;
+            CurrentTextureKey = aVariant;
         }
 
         /// <summary>
@@ -114,7 +183,7 @@ namespace Deadblock.Generic
         /// </summary>
         public Texture2D GetActiveTexture()
         {
-            return myTextureSpec.Textures[myCurrentTextureKey];
+            return TextureSpec.Textures[CurrentTextureKey];
         }
 
         /// <summary>
@@ -134,14 +203,18 @@ namespace Deadblock.Generic
         /// with the specified drawMode converter.
         /// DrawMode is usually specified via assets config.
         /// </param>
-        public void Render(Vector2 aPosition, bool isRelative = true)
+        virtual public void Render(Vector2 aPosition, bool isRelative = true)
         {
 
             var tempTexture = GetActiveTexture();
             var tempPosition = (isRelative) ? GetRelativePosition(aPosition) : aPosition;
+            var tempScale = GetRelativeScale(tempTexture);
 
-            var tempColor = Color.White * Brightness;
-            gameInstance.SpriteBatch.Draw(tempTexture, tempPosition, tempColor);
+            var tempColor = Color.White * Alpha;
+            gameInstance.SpriteBatch.Draw(tempTexture,
+                    tempPosition,
+                    tempColor,
+                    scale: tempScale);
         }
 
         /// <summary>
@@ -159,19 +232,19 @@ namespace Deadblock.Generic
         }
 
         /// <summary>
-        /// Sets texture brightness,
+        /// Sets texture alpha,
         /// prevents it to go over 1.
         /// </summary>
         /// <returns>
-        /// The new brightness value.
+        /// The new alpha value.
         /// </returns>
-        public float SetBrightness(float aValue)
+        public float SetAlpha(float aValue)
         {
-            if (aValue > 1f) Brightness = 1f;
-            else if (aValue < 0f) Brightness = 0f;
-            else Brightness = aValue;
+            if (aValue > 1f) Alpha = 1f;
+            else if (aValue < 0f) Alpha = 0f;
+            else Alpha = aValue;
 
-            return Brightness;
+            return Alpha;
         }
     }
 }

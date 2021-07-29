@@ -159,7 +159,7 @@ namespace Deadblock.Tools
         /// </summary>
         public static long GetTime()
         {
-            return DateTimeOffset.Now.ToUnixTimeSeconds() * 1000;
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
         /// <summary>
@@ -191,6 +191,20 @@ namespace Deadblock.Tools
 
             rectTexture.SetData(pixelsData);
             return rectTexture;
+        }
+
+        /// <summary>
+        /// Returns position of a random point
+        /// on the screen, represented as 2d vector.
+        /// </summary>
+        public static Vector2 RandomizeScreenPosition(GameProcess aGame)
+        {
+            var tempScreenResolution = GetScreenResolution(aGame);
+
+            var tempRandomX = RandomizeValue(0, tempScreenResolution.X);
+            var tempRandomY = RandomizeValue(0, tempScreenResolution.Y);
+
+            return new Vector2(tempRandomX, tempRandomY);
         }
     }
 }

@@ -4,20 +4,18 @@ namespace Deadblock.GUI
 {
     public class TreeMetric : GUIMetric
     {
+        private int myMaxValue;
+
         public TreeMetric(GameProcess aGame, Vector2 aPosition) : base(aGame, aPosition, "icon/tree")
         {
-            myCurrentValue = "0";
+            myMaxValue = gameInstance.World.MainPlayer.Bag.MaxNumberOfTrees;
+            myCurrentValue = $"0/{myMaxValue}";
         }
 
-        public override void Draw()
-        {
-            base.Draw();
-        }
-
-        public override void Update()
+        override public void Update()
         {
             var nOfTrees = gameInstance.World.MainPlayer.Bag.Trees;
-            myCurrentValue = nOfTrees.ToString();
+            myCurrentValue = $"{nOfTrees}/{myMaxValue}";
 
             base.Update();
         }

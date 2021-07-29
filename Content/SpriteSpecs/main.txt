@@ -3,30 +3,43 @@ ID: 1
 Name: env/main-grass
 Paths: Default > ./Content/Sprites/Environment/Ground/tile006.png;
 DrawPositionMode: ORIGINAL_POINT
+ResizeMode: ORIGINAL
 ----------------------------
 ID: 2
 Name: env/green-tree
 Paths: Default > ./Content/Sprites/Environment/Entries/SmallTree.png;
 DrawPositionMode: BOTTOM_TO_POINT
+ResizeMode: ORIGINAL
 ----------------------------
 ID: 3
 Name: ent/player
 Paths: Default > ./Content/Sprites/Players/Main/Bottom.png; Up > ./Content/Sprites/Players/Main/Top.png; Left > ./Content/Sprites/Players/Main/Left.png; Right > ./Content/Sprites/Players/Main/Right.png; Down > ./Content/Sprites/Players/Main/Bottom.png;
 DrawPositionMode: ORIGINAL_POINT
+ResizeMode: ORIGINAL
 ----------------------------
 ID: 4
 Name: env/tree-spawner
 Paths: Default > ./Content/Sprites/Environment/Ground/tile006.png;
 DrawPositionMode: ORIGINAL_POINT
+ResizeMode: ORIGINAL
 ActiveInstanceName: Deadblock.Logic.TreeSpawner
 ----------------------------
 ID: 5
 Name: ent/devil
 Paths: Default > ./Content/Sprites/Monsters/Devil/Bottom.png; Up > ./Content/Sprites/Monsters/Devil/Top.png; Left > ./Content/Sprites/Monsters/Devil/Left.png; Right > ./Content/Sprites/Monsters/Devil/Right.png; Down > ./Content/Sprites/Monsters/Devil/Bottom.png;
 DrawPositionMode: ORIGINAL_POINT
+ResizeMode: ORIGINAL
 ----------------------------
 ID: 6
 Name: icon/tree
 Paths: Default > ./Content/GUI/Icons/Tree.png;
 DrawPositionMode: ORIGINAL_POINT
+ResizeMode: ORIGINAL
+----------------------------
+ID: 7
+Name: env/water
+Paths: Default > ./Content/Sprites/Environment/Animated/Water/tile000.png; Frame1 > ./Content/Sprites/Environment/Animated/Water/tile001.png; Frame2 > ./Content/Sprites/Environment/Animated/Water/tile002.png; Frame3 > ./Content/Sprites/Environment/Animated/Water/tile003.png; Frame4 > ./Content/Sprites/Environment/Animated/Water/tile004.png; Frame5 > ./Content/Sprites/Environment/Animated/Water/tile005.png; Frame6 > ./Content/Sprites/Environment/Animated/Water/tile006.png; Frame7 > ./Content/Sprites/Environment/Animated/Water/tile007.png; Frame8 > ./Content/Sprites/Environment/Animated/Water/tile008.png; Frame9 > ./Content/Sprites/Environment/Animated/Water/tile009.png; Frame10 > ./Content/Sprites/Environment/Animated/Water/tile010.png; Frame11 > ./Content/Sprites/Environment/Animated/Water/tile011.png; Frame12 > ./Content/Sprites/Environment/Animated/Water/tile012.png; Frame13 > ./Content/Sprites/Environment/Animated/Water/tile013.png; Frame14 > ./Content/Sprites/Environment/Animated/Water/tile014.png;
+DrawPositionMode: ORIGINAL_POINT
+ResizeMode: SCALE_FULL
+ActiveInstanceName: Deadblock.Logic.WaterStream
 ----------------------------
