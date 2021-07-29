@@ -19,7 +19,7 @@ namespace Deadblock.Logic
 
             SetSpeed(3);
             SetStrength(10);
-            SetAttackRange(100);
+            SetAttackRange(50);
             SetAttackSpeed(500);
 
             OnDie.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_LOST));
