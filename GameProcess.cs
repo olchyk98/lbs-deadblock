@@ -1,25 +1,31 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Deadblock.Engine;
 using Deadblock.GUI;
+using Deadblock.Session;
 
 namespace Deadblock
 {
-    public enum SessionFinishScenario
-    {
-        PLAYER_WON,
-        PLAYER_LOST,
-    }
-
     public class GameProcess : Game
     {
         private GraphicsDeviceManager myGraphics;
 
+#region Sessions
+        private MainMenuSession myMenuSession;
+        private PlaySession myPlaySession;
+#endregion
+
+#region AlwaysAlive
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentWorker GameContents { get; private set; }
-        public InputSystem InputSystem { get; private set; }
-        public GUIOverlay GUIOverlay { get; private set; }
-        public World World { get; private set; }
+#endregion
+
+#region PlaySession
+        public InputSystem InputSystem { get => myPlaySession.InputSystem; }
+        public GUIOverlay GUIOverlay { get => myPlaySession.GUIOverlay; }
+        public World World { get => myPlaySession.World; }
+#endregion
 
         public GameProcess()
         {
@@ -35,10 +41,20 @@ namespace Deadblock
 
         override protected void Initialize()
         {
-            InputSystem = new InputSystem(this);
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
-            World = new World(this);
-            GUIOverlay = new GUIOverlay(this);
+
+            myMenuSession = new MainMenuSession(this);
+            myPlaySession = new PlaySession(this);
+
+            myMenuSession.OnPlay.Subscribe(() => Console.WriteLine("Play"));
+            myMenuSession.OnQuit.Subscribe(() => Exit());
+
+            //////////////////////////
+
+            myMenuSession.Initialize();
+            //myPlaySession.Initialize();
+
+            //////////////////////////
 
             base.Initialize();
         }
@@ -50,9 +66,8 @@ namespace Deadblock
 
         override protected void Update(GameTime gameTime)
         {
-            InputSystem.Update();
-            World.Update();
-            GUIOverlay.Update();
+            myMenuSession.Update();
+            //myPlaySession.Update();
 
             base.Update(gameTime);
         }
@@ -63,28 +78,12 @@ namespace Deadblock
 
             SpriteBatch.Begin();
 
-            World.Draw();
-            GUIOverlay.Draw();
-
+            // TODO: Abstract to SessionOrchestrator
+            myMenuSession.Draw();
+            //myPlaySession.Draw();
             SpriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        /// <summary>
-        /// EndGame Routine:
-        /// Ends current session,
-        /// Shows the lose message,
-        /// and prompt with a button
-        /// to continue.
-        /// </summary>
-        /// <param name="anEnding">
-        /// Finish scenario.
-        /// </param>
-        public void EndGame(SessionFinishScenario anEnding)
-        {
-            // TODO: Implement
-            return;
         }
     }
 }

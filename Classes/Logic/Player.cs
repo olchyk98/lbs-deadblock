@@ -3,12 +3,16 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Deadblock.Engine;
 using Deadblock.Tools;
+using Deadblock.Generic;
 
 namespace Deadblock.Logic
 {
     public class Player : RototableEntity
     {
         public PlayerBag Bag { get; private set; }
+
+        public UniversalEvent OnLose { get; private set; }
+        public UniversalEvent OnWin { get; private set; }
 
         public Player(GameProcess aGame) : base(aGame, "ent/player", 100)
         {
@@ -22,15 +26,18 @@ namespace Deadblock.Logic
             SetAttackRange(50);
             SetAttackSpeed(500);
 
-            OnDie.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_LOST));
+            OnLose = new UniversalEvent();
+            OnWin = new UniversalEvent();
+
+            OnDie.Subscribe(() => OnLose.Invoke());
         }
 
         private void InitializeBag()
         {
             Bag = new PlayerBag(gameInstance);
 
-            Bag.OnWaterExpired.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_LOST));
-            Bag.OnAllTreesCollected.Subscribe(() => gameInstance.EndGame(SessionFinishScenario.PLAYER_WON));
+            Bag.OnWaterExpired.Subscribe(() => OnLose.Invoke());
+            Bag.OnAllTreesCollected.Subscribe(() => OnWin.Invoke());
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using Deadblock.Generic;
 using Microsoft.Xna.Framework.Input;
+
 namespace Deadblock.Engine
 {
     public class InputSystem : DeliveredGameSlot

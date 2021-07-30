@@ -73,8 +73,17 @@ namespace Deadblock.Engine
             return mySources[aSourceName];
         }
 
-        // NOTE: Optimized since 20 Jun 2021.
-        // Hours spent to optimize: 0.1
+        /// <summary>
+        /// Returns all textures from the config
+        /// that are previously marked with the specified prefix.
+        /// </summary>
+        /// <param name="aPrefix">
+        /// Targeted prefix.
+        /// </param>
+        /// <returns>
+        /// Array of textures with
+        /// the specified prefix.
+        /// </returns>
         public WorkerTexture[] GetTexturesByPrefix(string aPrefix)
         {
             var tempFoundPrefixes = new List<WorkerTexture>();

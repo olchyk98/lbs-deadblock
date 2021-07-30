@@ -44,22 +44,19 @@ namespace Deadblock.Tools
         /// 2D array of chars parsed
         /// from the targeted file.
         /// </returns>
-        public static char[][] ReadAs2DSequence(string aPath, char aSeparator = ',')
+        public static string[][] ReadAs2DSequence(string aPath, char aSeparator = ',')
         {
-            // NOTE: It's possible to implement that with LINQ,
-            // but present approach is much faster and readable.
-
             string[] tempLines = ReadAsLines(aPath);
-            var tempSequence = new char[tempLines.Length][];
+            var tempSequence = new string[tempLines.Length][];
 
             for (var ma = 0; ma < tempLines.Length; ++ma)
             {
                 string[] parts = tempLines[ma].Split(aSeparator);
-                tempSequence[ma] = new char[parts.Length];
+                tempSequence[ma] = new string[parts.Length];
 
                 for (var mk = 0; mk < parts.Length; ++mk)
                 {
-                    tempSequence[ma][mk] = parts[mk].Trim().First();
+                    tempSequence[ma][mk] = parts[mk].Trim();
                 }
             }
 
@@ -82,7 +79,7 @@ namespace Deadblock.Tools
         /// 3D array of chars parsed
         /// from the targeted file.
         /// </returns>
-        public static char[][][] ReadAs3DSequence(string[] somePaths, char aSeparator = ',')
+        public static string[][][] ReadAs3DSequence(string[] somePaths, char aSeparator = ',')
         {
             return somePaths
                 .ToList()

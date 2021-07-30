@@ -49,3 +49,15 @@ Paths: Default > ./Content/Sprites/Environment/Ground/VerticalBridge.png
 ResizeMode: SCALE_FULL
 DrawPositionMode: ORIGINAL_POINT
 ----------------------------
+ID: 9
+Name: uibtn/play
+Paths: Default > ./Content/GUI/Buttons/Play.png
+ResizeMode: ORIGINAL
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
+ID: 10
+Name: uibtn/quit
+Paths: Default > ./Content/GUI/Buttons/Quit.png
+ResizeMode: ORIGINAL
+DrawPositionMode: ORIGINAL_POINT
+----------------------------
