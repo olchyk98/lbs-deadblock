@@ -70,13 +70,13 @@ namespace Deadblock.Engine
         /// as vector3, where Z axis corresponds
         /// to the layer index.
         /// </param>
-        private void InstantiateMapCell(char aReferenceKey, Vector3 aCellPosition)
+        private void InstantiateMapCell(string aReferenceKey, Vector3 aCellPosition)
         {
             ISpriteBlock tempInstance = default;
             var tempSpec = GetEnvTexture(aReferenceKey);
 
             // Handle air
-            if (aReferenceKey == '0')
+            if (aReferenceKey == "0")
             {
                 AssignBlockToMapCell(null, aCellPosition);
                 return;
@@ -123,7 +123,7 @@ namespace Deadblock.Engine
         /// Targeted env texture or null
         /// if it's not found.
         /// </returns>
-        private WorkerTexture GetEnvTexture(char anId)
+        private WorkerTexture GetEnvTexture(string anId)
         {
             return myMapTextures
                 .ToList()

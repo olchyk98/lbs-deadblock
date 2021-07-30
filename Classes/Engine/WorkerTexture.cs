@@ -15,7 +15,7 @@ namespace Deadblock.Engine
         /// Should be a char-number.
         /// Example value: '4'
         /// </summary>
-        public char ID { get; set; }
+        public string ID { get; set; }
 
         /// <summary>
         /// Name of texture.

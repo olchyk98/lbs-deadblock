@@ -33,5 +33,42 @@ namespace Deadblock.Tools
 
             return false;
         }
+
+        /// <summary>
+        /// Checks if the specified position with dimensions
+        /// is in the described rectangle.
+        ///
+        /// Similar to Texture.Intersects(Texture),
+        /// except it's generic and works with vectors.
+        /// </summary>
+        /// <param name="aPosition1">
+        /// Position of the
+        /// first testing object.
+        /// </param>
+        /// <param name="aPosition2">
+        /// Position of the
+        /// second testing object.
+        /// </param>
+        /// <param name="someDimensions2">
+        /// Dimensions of the
+        /// second testing object.
+        /// </param>
+        /// <returns>
+        /// Boolean that represents if
+        /// the first object intersects
+        /// with the second one.
+        /// </returns>
+        public static bool CheckIfPointIsInRectangle (Vector2 aPosition1,
+                Vector2 aPosition2,
+                Vector2 someDimensions2)
+        {
+            var tempDoOverlapOnX = aPosition1.X > aPosition2.X
+                && aPosition1.X < aPosition2.X + someDimensions2.X;
+
+            var tempDoOverlapOnY = aPosition1.Y > aPosition2.Y
+                && aPosition1.Y < aPosition2.Y + someDimensions2.Y;
+
+            return tempDoOverlapOnX && tempDoOverlapOnY;
+        }
     }
 }
