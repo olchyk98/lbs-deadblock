@@ -13,13 +13,13 @@ namespace Deadblock.Sessions
         public PlaySession PlaySession { get; private set; }
 
         public SessionOrchestrator(GameProcess aGame) : base(aGame)
-        {  }
+        { }
 
         /// <summary>
         /// Creates session instances,
         /// and subscribes to their main events.
         /// </summary>
-        private void InitializeSessions ()
+        private void InitializeSessions()
         {
             MenuSession = new MainMenuSession(gameInstance);
             PlaySession = new PlaySession(gameInstance);
@@ -28,7 +28,7 @@ namespace Deadblock.Sessions
             MenuSession.OnPlay.Subscribe(() => SelectSession(PlaySession));
             MenuSession.OnQuit.Subscribe(() => gameInstance.Exit());
 
-            foreach(var session in GetAllSessions())
+            foreach (var session in GetAllSessions())
                 session.Initialize();
         }
 
@@ -40,9 +40,9 @@ namespace Deadblock.Sessions
         /// <param name="aSession">
         /// Targeted session.
         /// </param>
-        private void SelectSession (ISession aSession)
+        private void SelectSession(ISession aSession)
         {
-            if(aSession == null)
+            if (aSession == null)
             {
                 throw new AggregateException("Tried to setup an invalid session.");
             }
@@ -54,7 +54,7 @@ namespace Deadblock.Sessions
         /// Returns all available sessions
         /// as a list.
         /// </summary>
-        private IList<ISession> GetAllSessions ()
+        private IList<ISession> GetAllSessions()
         {
             var tempSessions = new List<ISession>();
 
@@ -77,7 +77,7 @@ namespace Deadblock.Sessions
         /// Updates internalm mechanisms
         /// for current session
         /// </summary>
-        public void Update ()
+        public void Update()
         {
             myActiveSession.Update();
         }

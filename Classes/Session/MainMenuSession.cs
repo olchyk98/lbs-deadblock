@@ -17,7 +17,7 @@ namespace Deadblock.Sessions
 
         private readonly static int MarginBetweenButtons = 10;
 
-        public MainMenuSession (GameProcess aGame) : base(aGame)
+        public MainMenuSession(GameProcess aGame) : base(aGame)
         {
             OnPlay = new UniversalEvent();
             OnQuit = new UniversalEvent();
@@ -49,12 +49,12 @@ namespace Deadblock.Sessions
             ////////////////////
 
             var tempScreenDimensions = NativeUtils.GetScreenResolution(gameInstance);
-            var tempChunkWidth = myButtons.Aggregate(0, (acc, ma) => acc + (int) ma.GetDimensions().X + MarginBetweenButtons);
+            var tempChunkWidth = myButtons.Aggregate(0, (acc, ma) => acc + (int)ma.GetDimensions().X + MarginBetweenButtons);
             var tempChunkX = tempScreenDimensions.X / 2 - tempChunkWidth / 2;
 
             // A hacky way to progressively
             // position the buttons.
-            for(var ma = 0; ma < myButtons.Count; ++ma)
+            for (var ma = 0; ma < myButtons.Count; ++ma)
             {
                 var button = myButtons[ma];
                 var buttonDimensions = button.GetDimensions();
@@ -67,7 +67,7 @@ namespace Deadblock.Sessions
             }
         }
 
-        public void Draw ()
+        public void Draw()
         {
             foreach (var button in myButtons)
                 button.Draw();

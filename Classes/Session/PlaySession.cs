@@ -26,7 +26,7 @@ namespace Deadblock.Sessions
 
         public UniversalEvent OnEnd { get; private set; }
 
-        public PlaySession (GameProcess aGame) : base(aGame)
+        public PlaySession(GameProcess aGame) : base(aGame)
         {
             OnEnd = new UniversalEvent();
         }
@@ -35,13 +35,13 @@ namespace Deadblock.Sessions
         /// Draws current scenario message
         /// in the middle of the canvas.
         /// </summary>
-        private void DrawScenarioStatus ()
+        private void DrawScenarioStatus()
         {
             string tempStatus = default;
 
             ////////////////////////////////
 
-            switch(myActiveScenario)
+            switch (myActiveScenario)
             {
                 case GameEndScenario.PLAYER_WON:
                     tempStatus = "You Won!";
@@ -52,10 +52,10 @@ namespace Deadblock.Sessions
                 case GameEndScenario.PLAYER_LOST_NOHEALTH:
                     tempStatus = "You are Dead!";
                     break;
-                default:break;
+                default: break;
             }
 
-            if(tempStatus == default) throw new Exception();
+            if (tempStatus == default) throw new Exception();
 
             ////////////////////////////////
 
@@ -116,7 +116,7 @@ namespace Deadblock.Sessions
 
         public void Draw()
         {
-            if(myActiveScenario != null)
+            if (myActiveScenario != null)
             {
                 DrawScenarioStatus();
                 return;
@@ -126,14 +126,14 @@ namespace Deadblock.Sessions
             GUIOverlay.Draw();
         }
 
-        public void Update ()
+        public void Update()
         {
             InputSystem.Update();
             World.Update();
             GUIOverlay.Update();
         }
 
-        public void Initialize ()
+        public void Initialize()
         {
             InputSystem = new InputSystem(gameInstance);
             World = new World(gameInstance);
