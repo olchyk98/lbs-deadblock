@@ -11,16 +11,16 @@ namespace Deadblock
         private GraphicsDeviceManager myGraphics;
         private SessionOrchestrator mySessionOrchestrator;
 
-#region AlwaysAlive
+        #region AlwaysAlive
         public SpriteBatch SpriteBatch { get; private set; }
         public ContentWorker GameContents { get; private set; }
-#endregion
+        #endregion
 
-#region PlaySession
+        #region PlaySession
         public InputSystem InputSystem { get => mySessionOrchestrator.PlaySession.InputSystem; }
         public GUIOverlay GUIOverlay { get => mySessionOrchestrator.PlaySession.GUIOverlay; }
         public World World { get => mySessionOrchestrator.PlaySession.World; }
-#endregion
+        #endregion
 
         public GameProcess()
         {

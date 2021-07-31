@@ -14,7 +14,7 @@ namespace Deadblock.GUI
         public Vector2 Position { get; private set; }
         public UniversalEvent OnClick { get; private set; }
 
-        public GUIButton (GameProcess aGame,
+        public GUIButton(GameProcess aGame,
                 Vector2 aPosition,
                 string aTextureKey) : base(aGame)
         {
@@ -39,7 +39,7 @@ namespace Deadblock.GUI
         /// and checks for user interactions.
         /// </summary>
         // TODO: Abstract in the future.
-        public void Update ()
+        public void Update()
         {
             var tempDimensions = GetDimensions();
 
@@ -48,7 +48,7 @@ namespace Deadblock.GUI
 
             var isClicked = mouseState.LeftButton == ButtonState.Pressed;
 
-            if(isClicked && EngineUtils.CheckIfPointIsInRectangle(mousePosition, Position, tempDimensions))
+            if (isClicked && EngineUtils.CheckIfPointIsInRectangle(mousePosition, Position, tempDimensions))
             {
                 OnClick.Invoke();
             }
@@ -70,9 +70,9 @@ namespace Deadblock.GUI
         /// AggregateException, if the specified
         /// position is out of the canvas range.
         /// </throws>
-        public Vector2 SetPosition (Vector2 aPosition)
+        public Vector2 SetPosition(Vector2 aPosition)
         {
-            if(!NativeUtils.IsPointOnCanvas(gameInstance, aPosition))
+            if (!NativeUtils.IsPointOnCanvas(gameInstance, aPosition))
             {
                 throw new AggregateException("The specified button position is out-of-canvas. Contact DEV.");
             }
@@ -85,7 +85,7 @@ namespace Deadblock.GUI
         /// Returns dimensions of
         /// the button.
         /// </summary>
-        public Vector2 GetDimensions ()
+        public Vector2 GetDimensions()
         {
             var tempTexture = myTexture.GetDefaultTexture();
             return new Vector2(tempTexture.Width, tempTexture.Height);

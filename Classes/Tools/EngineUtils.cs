@@ -58,7 +58,7 @@ namespace Deadblock.Tools
         /// the first object intersects
         /// with the second one.
         /// </returns>
-        public static bool CheckIfPointIsInRectangle (Vector2 aPosition1,
+        public static bool CheckIfPointIsInRectangle(Vector2 aPosition1,
                 Vector2 aPosition2,
                 Vector2 someDimensions2)
         {
