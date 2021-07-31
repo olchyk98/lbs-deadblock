@@ -9,7 +9,6 @@ namespace Deadblock.GUI
     {
         private Vector2 myPosition;
         private WorkerTexture myIconTexture;
-        private FontDrawer myFontDrawer;
         protected string myCurrentValue;
 
         // Result width of the icon.
@@ -21,8 +20,6 @@ namespace Deadblock.GUI
             myPosition = aPosition;
             myCurrentValue = "";
             myIconTexture = gameInstance.GameContents.GetTexture(anIconKey);
-
-            myFontDrawer = new FontDrawer(aGame);
         }
 
         /// <summary>
@@ -43,7 +40,7 @@ namespace Deadblock.GUI
 
         private void DrawValue()
         {
-            var tempFont = myFontDrawer.PullFont("Arial");
+            var tempFont = gameInstance.GameContents.FontDrawer.PullFont("Arial");
             var tempPosition = myPosition + Vector2.UnitX * (IconSize + IconValueMargin);
 
             gameInstance.SpriteBatch.DrawString(tempFont, myCurrentValue, tempPosition, Color.White);

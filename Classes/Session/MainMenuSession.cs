@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Deadblock.Generic;
 using Microsoft.Xna.Framework;
@@ -5,7 +6,7 @@ using Deadblock.GUI;
 using Deadblock.Tools;
 using System.Collections.Generic;
 
-namespace Deadblock.Session
+namespace Deadblock.Sessions
 {
     public class MainMenuSession : DeliveredGameSlot, ISession
     {
@@ -22,6 +23,10 @@ namespace Deadblock.Session
             OnQuit = new UniversalEvent();
         }
 
+        /// <summary>
+        /// Instantiates and positions
+        /// main buttons.
+        /// </summary>
         private void InitializeNavigationButtons()
         {
             myButtons = new List<GUIButton>();
@@ -44,23 +49,21 @@ namespace Deadblock.Session
             ////////////////////
 
             var tempScreenDimensions = NativeUtils.GetScreenResolution(gameInstance);
-            var tempFullChunkHeight = myButtons.Aggregate(0,
-                    (acc, ma) => acc + (int) ma.GetDimensions().Y);
-            // TODO Fix me with margin [..1^]
-            var tempContainerY = tempScreenDimensions.Y / 2 - tempFullChunkHeight / 2; 
+            var tempChunkWidth = myButtons.Aggregate(0, (acc, ma) => acc + (int) ma.GetDimensions().X + MarginBetweenButtons);
+            var tempChunkX = tempScreenDimensions.X / 2 - tempChunkWidth / 2;
 
             // A hacky way to progressively
             // position the buttons.
             for(var ma = 0; ma < myButtons.Count; ++ma)
             {
-                var tempButton = myButtons[ma];
+                var button = myButtons[ma];
+                var buttonDimensions = button.GetDimensions();
 
-                var buttonDimensions = tempButton.GetDimensions();
-                var positionX = tempScreenDimensions.X / 2 - buttonDimensions.X / 2;
-                var positionY = tempContainerY + ma * (MarginBetweenButtons + buttonDimensions.Y);
+                var positionX = tempChunkX + ma * (buttonDimensions.X + MarginBetweenButtons);
+                var positionY = tempScreenDimensions.Y / 2 + buttonDimensions.Y / 2;
                 var position = new Vector2(positionX, positionY);
 
-                tempButton.SetPosition(position);
+                button.SetPosition(position);
             }
         }
 

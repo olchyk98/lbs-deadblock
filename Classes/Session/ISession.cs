@@ -1,4 +1,4 @@
-namespace Deadblock.Session
+namespace Deadblock.Sessions
 {
     public interface ISession
     {

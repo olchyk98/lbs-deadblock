@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Deadblock.Generic;
 using Deadblock.Tools;
-using Deadblock.Engine;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Deadblock.Engine
@@ -11,10 +10,12 @@ namespace Deadblock.Engine
     public class ContentWorker : DeliveredGameSlot, IContentWorker
     {
         private Dictionary<string, WorkerTexture> mySources;
+        public FontDrawer FontDrawer { get; private set; }
 
         public ContentWorker(GameProcess aGame, string aConfigsPath) : base(aGame)
         {
             LoadSources(aConfigsPath);
+            FontDrawer = new FontDrawer(aGame);
         }
 
         /// <summary>
