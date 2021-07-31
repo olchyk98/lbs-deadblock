@@ -5,7 +5,7 @@ namespace Deadblock.Engine
         public Devil(GameProcess aGame) : base(aGame, "ent/devil", 25f)
         {
             SetSpeed(2);
-            SetStrength(3);
+            SetStrength(6);
             SetAttackSpeed(1000);
             SetAttackRange(5);
         }

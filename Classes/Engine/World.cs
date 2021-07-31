@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Deadblock.Generic;
 using Deadblock.Logic;
 using Deadblock.Tools;
+using Deadblock.Sessions;
 
 namespace Deadblock.Engine
 {
@@ -19,8 +20,9 @@ namespace Deadblock.Engine
         // to handle layers.
         private ISpriteBlock[,,] myMap;
         private WorkerTexture[] myMapTextures;
-
         private List<DrawableEntity> myEntities;
+
+        public UniversalEvent<GameEndScenario> OnEnd { get; private set; }
 
         private static string[] MapReferenceLayerPaths = new string[] {
             @"./Content/Levels/TheMain/ground.txt",
@@ -30,6 +32,7 @@ namespace Deadblock.Engine
         public World(GameProcess aGame) : base(aGame)
         {
             MonsterSpawner = new MonsterSpawner(aGame);
+            OnEnd = new UniversalEvent<GameEndScenario>();
 
             LoadMap();
             InstantiateEntities();
@@ -170,6 +173,10 @@ namespace Deadblock.Engine
             ////////////////////////
 
             var player = new Player(gameInstance);
+
+            ////////////////////////
+
+            player.OnFinish.Subscribe(OnEnd.Invoke);
 
             ////////////////////////
 

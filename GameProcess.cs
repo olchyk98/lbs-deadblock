@@ -1,20 +1,15 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Deadblock.Engine;
 using Deadblock.GUI;
-using Deadblock.Session;
+using Deadblock.Sessions;
 
 namespace Deadblock
 {
     public class GameProcess : Game
     {
         private GraphicsDeviceManager myGraphics;
-
-#region Sessions
-        private MainMenuSession myMenuSession;
-        private PlaySession myPlaySession;
-#endregion
+        private SessionOrchestrator mySessionOrchestrator;
 
 #region AlwaysAlive
         public SpriteBatch SpriteBatch { get; private set; }
@@ -22,39 +17,28 @@ namespace Deadblock
 #endregion
 
 #region PlaySession
-        public InputSystem InputSystem { get => myPlaySession.InputSystem; }
-        public GUIOverlay GUIOverlay { get => myPlaySession.GUIOverlay; }
-        public World World { get => myPlaySession.World; }
+        public InputSystem InputSystem { get => mySessionOrchestrator.PlaySession.InputSystem; }
+        public GUIOverlay GUIOverlay { get => mySessionOrchestrator.PlaySession.GUIOverlay; }
+        public World World { get => mySessionOrchestrator.PlaySession.World; }
 #endregion
 
         public GameProcess()
         {
             myGraphics = new GraphicsDeviceManager(this);
+            mySessionOrchestrator = new SessionOrchestrator(this);
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
             myGraphics.IsFullScreen = true;
-            myGraphics.PreferredBackBufferWidth = 940;
-            myGraphics.PreferredBackBufferHeight = 540;
+            myGraphics.PreferredBackBufferWidth = 800;
+            myGraphics.PreferredBackBufferHeight = 600;
         }
 
         override protected void Initialize()
         {
             GameContents = new ContentWorker(this, @"./Content/SpriteSpecs/main.txt");
-
-            myMenuSession = new MainMenuSession(this);
-            myPlaySession = new PlaySession(this);
-
-            myMenuSession.OnPlay.Subscribe(() => Console.WriteLine("Play"));
-            myMenuSession.OnQuit.Subscribe(() => Exit());
-
-            //////////////////////////
-
-            myMenuSession.Initialize();
-            //myPlaySession.Initialize();
-
-            //////////////////////////
+            mySessionOrchestrator.Initialize();
 
             base.Initialize();
         }
@@ -66,8 +50,7 @@ namespace Deadblock
 
         override protected void Update(GameTime gameTime)
         {
-            myMenuSession.Update();
-            //myPlaySession.Update();
+            mySessionOrchestrator.Update();
 
             base.Update(gameTime);
         }
@@ -77,10 +60,7 @@ namespace Deadblock
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             SpriteBatch.Begin();
-
-            // TODO: Abstract to SessionOrchestrator
-            myMenuSession.Draw();
-            //myPlaySession.Draw();
+            mySessionOrchestrator.Draw();
             SpriteBatch.End();
 
             base.Draw(gameTime);

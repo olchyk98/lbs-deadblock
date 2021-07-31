@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Deadblock.Sessions;
 using Deadblock.Engine;
 using Deadblock.Tools;
 using Deadblock.Generic;
@@ -11,33 +12,31 @@ namespace Deadblock.Logic
     {
         public PlayerBag Bag { get; private set; }
 
-        public UniversalEvent OnLose { get; private set; }
-        public UniversalEvent OnWin { get; private set; }
+        public UniversalEvent<GameEndScenario> OnFinish { get; private set; }
 
         public Player(GameProcess aGame) : base(aGame, "ent/player", 100)
         {
-            PlaceEntity();
+            OnFinish = new UniversalEvent<GameEndScenario>();
+
+            OnDie.Subscribe(() => OnFinish.Invoke(GameEndScenario.PLAYER_LOST_NOHEALTH));
+
             ConnectInput();
-            SetupHeadBars();
             InitializeBag();
+            SetupHeadBars();
+            PlaceEntity();
 
             SetSpeed(3);
             SetStrength(10);
             SetAttackRange(50);
             SetAttackSpeed(500);
-
-            OnLose = new UniversalEvent();
-            OnWin = new UniversalEvent();
-
-            OnDie.Subscribe(() => OnLose.Invoke());
         }
 
         private void InitializeBag()
         {
             Bag = new PlayerBag(gameInstance);
 
-            Bag.OnWaterExpired.Subscribe(() => OnLose.Invoke());
-            Bag.OnAllTreesCollected.Subscribe(() => OnWin.Invoke());
+            Bag.OnWaterExpired.Subscribe(() => OnFinish.Invoke(GameEndScenario.PLAYER_LOST_NODRINK));
+            Bag.OnAllTreesCollected.Subscribe(() => OnFinish.Invoke(GameEndScenario.PLAYER_WON));
         }
 
         /// <summary>
