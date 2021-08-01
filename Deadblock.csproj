@@ -26,6 +26,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.MacOS" Version="3.7.1.189" />
     <PackageReference Include="ObjectDumper.NET" Version="3.0.20251.1" />
   </ItemGroup>
 </Project>

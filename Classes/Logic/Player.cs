@@ -8,7 +8,7 @@ using Deadblock.Generic;
 
 namespace Deadblock.Logic
 {
-    public class Player : RototableEntity
+    public sealed class Player : RototableEntity
     {
         public PlayerBag Bag { get; private set; }
 

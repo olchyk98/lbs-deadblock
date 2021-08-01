@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -205,6 +207,29 @@ namespace Deadblock.Tools
             var tempRandomY = RandomizeValue(0, tempScreenResolution.Y);
 
             return new Vector2(tempRandomX, tempRandomY);
+        }
+
+        /// <summary>
+        /// Generates a random string
+        /// of number with the specified length.
+        /// </summary>
+        /// <param name="aLength">
+        /// Length of the ID.
+        /// </param>
+        /// <returns>
+        /// Generated ID.
+        /// </returns>
+        public static string GenerateID(int aLength = 24)
+        {
+            var tempStringBuilder = new StringBuilder();
+
+            for (int ma = 0; ma < aLength; ma++)
+            {
+                char part = RandomizeValue(0, 9).ToString().First();
+                tempStringBuilder.Append(part);
+            }
+
+            return tempStringBuilder.ToString();
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace Deadblock.Engine
 {
-    public class Devil : Monster
+    public sealed class Devil : Monster
     {
         public Devil(GameProcess aGame) : base(aGame, "ent/devil", 25f)
         {
