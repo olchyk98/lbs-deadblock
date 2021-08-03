@@ -52,5 +52,11 @@ namespace Deadblock.Engine
             DoThink();
             base.Update();
         }
+
+        override public bool AttackEntity(Entity aTarget)
+        {
+            SoundOrchestrator.PlaySoundInSequencer("monster/world/attack");
+            return base.AttackEntity(aTarget);
+        }
     }
 }

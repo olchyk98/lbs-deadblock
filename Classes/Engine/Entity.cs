@@ -21,6 +21,7 @@ namespace Deadblock.Engine
         public float MaxHealth { get; }
 
         public UniversalEvent OnDie { get; private set; }
+        internal SoundOrchestrator SoundOrchestrator;
 
         public Entity(GameProcess aGame, float someMaxHealth, float someHealth = default) : base(aGame)
         {
@@ -35,6 +36,7 @@ namespace Deadblock.Engine
             AttackSpeed = 0;
 
             OnDie = new UniversalEvent();
+            SoundOrchestrator = new SoundOrchestrator(aGame);
         }
 
         /// <summary>
@@ -117,6 +119,7 @@ namespace Deadblock.Engine
 
             //////////////////
 
+            SoundOrchestrator.PlaySoundInSequencer("entity/ground/walk");
             return SetPosition(tempNextPosition);
         }
 
@@ -247,7 +250,7 @@ namespace Deadblock.Engine
         /// even if the entity didn't actually attack,
         /// for example, if there's still attack cooldown active.
         /// </returns>
-        public bool AttackEntity(Entity aTarget)
+        virtual public bool AttackEntity(Entity aTarget)
         {
             var tempDistanceToTarget = (int)Vector2.Distance(Position, aTarget.Position);
             var tempCurrentTime = NativeUtils.GetTime();
@@ -262,6 +265,7 @@ namespace Deadblock.Engine
             // Execution
             aTarget.ApplyDamage(Strength);
             myLastAttackTime = tempCurrentTime;
+
             return true;
         }
     }
