@@ -1,0 +1,8 @@
+player/env/drink-water
+player/env/chop-tree
+
+player/world/attack
+monster/world/attack
+
+entity/ground/walk
+

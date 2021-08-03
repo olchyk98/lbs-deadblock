@@ -25,7 +25,8 @@ namespace Deadblock.Generic
         /// Key of the targeted sound,
         /// specified in the pipeline.
         /// </param>
-        private SoundEffect GetSoundEffect(string aKey) {
+        private SoundEffect GetSoundEffect(string aKey)
+        {
             // In this case, it's okay to load the same sound multiple times,
             // since MonoGame has an internal caching system implemented.
             // Reference: https://github.com/MonoGame/MonoGame/blob/f2ee0def3690e1c95273623f60fe47ddc8c12c68/MonoGame.Framework/Content/ContentManager.cs#L246
@@ -68,12 +69,12 @@ namespace Deadblock.Generic
             myActivePlayers.Remove(aPlayerId);
         }
 
-        public void PlaySoundInSequence(string aSoundKey)
+        public void PlaySoundInSequencer(string aSoundKey)
         {
             myActiveSequentialPlayers.TryGetValue(aSoundKey, out SoundEffectInstance tempExistingPlayer);
 
             // Checks if the player already exists.
-            if(tempExistingPlayer == null)
+            if (tempExistingPlayer == null)
             {
                 var tempSound = GetSoundEffect(aSoundKey);
                 SoundEffectInstance tempPlayer = tempSound.CreateInstance();
@@ -84,7 +85,7 @@ namespace Deadblock.Generic
 
             // Checks if the buffer is filled with the output
             // of this player.
-            if(tempExistingPlayer.State != SoundState.Stopped && tempExistingPlayer.State != SoundState.Paused)
+            if (tempExistingPlayer.State != SoundState.Stopped && tempExistingPlayer.State != SoundState.Paused)
             {
                 // Moves cursor to the beginning.
                 tempExistingPlayer.Stop();

@@ -85,6 +85,6 @@ namespace Deadblock.Generic
         /// - Requires a separate buffer!
         /// - Shall be implemented with Ux00 fillers.
         /// </implementation>
-        public void PlaySoundInSequence(string aSoundKey);
+        public void PlaySoundInSequencer(string aSoundKey);
     }
 }

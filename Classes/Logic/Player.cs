@@ -146,5 +146,11 @@ namespace Deadblock.Logic
             Bag.Update();
             base.Update();
         }
+
+        override public bool AttackEntity(Entity aTarget)
+        {
+            SoundOrchestrator.PlaySoundInSequencer("player/world/attack");
+            return base.AttackEntity(aTarget);
+        }
     }
 }
