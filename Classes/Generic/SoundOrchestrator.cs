@@ -4,17 +4,66 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace Deadblock.Generic
 {
+    /// <summary>
+    // Wrapper for SoundEffectInstance
+    // that keeps track of
+    // when the last time the player
+    // was fired.
+    /// </summary>
+    internal class SequentialPlayer
+    {
+        private long myLastPlayTime = default;
+        private SoundEffect mySoundEffect;
+
+        /// <summary>
+        /// Boolean, that represents if the sound instance
+        /// is played in this time.
+        /// If false, the Play method cannot
+        /// be called right, as the sample is currently playing.
+        /// </summary>
+        public bool IsPlayable
+        {
+            get => myLastPlayTime == default
+                || NativeUtils.GetTime() - myLastPlayTime > mySoundEffect.Duration.Milliseconds;
+        }
+
+        /// <summary>
+        /// Plays the sound.
+        /// </summary>
+        /// <returns>
+        /// Boolean, that represents
+        /// if the sound was played.
+        /// The method call can be ignored,
+        /// if the sample is already playing.
+        /// </returns>
+        public bool Play()
+        {
+            if (!IsPlayable) return false;
+
+            mySoundEffect.Play();
+            myLastPlayTime = NativeUtils.GetTime();
+
+            return true;
+        }
+
+        public SequentialPlayer(SoundEffect aSound)
+        {
+            mySoundEffect = aSound;
+        }
+    }
+
     public class SoundOrchestrator : DeliveredGameSlot, ISoundOrchestrator
     {
         // { id: instance }
         private Dictionary<string, SoundEffectInstance> myActivePlayers;
-        // { key: instance  }
-        private Dictionary<string, SoundEffectInstance> myActiveSequentialPlayers;
+        // { key: sequentialPlayer  }
+        private Dictionary<string, SequentialPlayer> myActiveSequentialPlayers;
+        private long lastTime = 0;
 
         public SoundOrchestrator(GameProcess aGame) : base(aGame)
         {
             myActivePlayers = new Dictionary<string, SoundEffectInstance>();
-            myActiveSequentialPlayers = new Dictionary<string, SoundEffectInstance>();
+            myActiveSequentialPlayers = new Dictionary<string, SequentialPlayer>();
         }
 
         /// <summary>
@@ -30,7 +79,7 @@ namespace Deadblock.Generic
             // In this case, it's okay to load the same sound multiple times,
             // since MonoGame has an internal caching system implemented.
             // Reference: https://github.com/MonoGame/MonoGame/blob/f2ee0def3690e1c95273623f60fe47ddc8c12c68/MonoGame.Framework/Content/ContentManager.cs#L246
-            return gameInstance.Content.Load<SoundEffect>(aKey);
+            return gameInstance.Content.Load<SoundEffect>($"Sounds/{aKey}");
         }
 
         public void KillPlayers()
@@ -71,28 +120,20 @@ namespace Deadblock.Generic
 
         public void PlaySoundInSequencer(string aSoundKey)
         {
-            myActiveSequentialPlayers.TryGetValue(aSoundKey, out SoundEffectInstance tempExistingPlayer);
-
-            // Checks if the player already exists.
-            if (tempExistingPlayer == null)
+            // Creates a new player if the
+            // sound was never called before.
+            if (!myActiveSequentialPlayers.ContainsKey(aSoundKey))
             {
                 var tempSound = GetSoundEffect(aSoundKey);
-                SoundEffectInstance tempPlayer = tempSound.CreateInstance();
+                var tempPlayer = new SequentialPlayer(tempSound);
 
                 myActiveSequentialPlayers[aSoundKey] = tempPlayer;
                 tempPlayer.Play();
             }
 
-            // Checks if the buffer is filled with the output
-            // of this player.
-            if (tempExistingPlayer.State != SoundState.Stopped && tempExistingPlayer.State != SoundState.Paused)
-            {
-                // Moves cursor to the beginning.
-                tempExistingPlayer.Stop();
-
-                // Plays the sound.
-                tempExistingPlayer.Play();
-            }
+            // Method, may be ignored, if the buffer
+            // is already filled with the sample output (sound emission).
+            myActiveSequentialPlayers[aSoundKey].Play();
         }
     }
 }

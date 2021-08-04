@@ -55,8 +55,12 @@ namespace Deadblock.Engine
 
         override public bool AttackEntity(Entity aTarget)
         {
-            SoundOrchestrator.PlaySoundInSequencer("monster/world/attack");
-            return base.AttackEntity(aTarget);
+            var couldAttack = base.AttackEntity(aTarget);
+
+            if (couldAttack)
+                SoundOrchestrator.PlaySoundInSequencer("monster-world-attack");
+
+            return couldAttack;
         }
     }
 }

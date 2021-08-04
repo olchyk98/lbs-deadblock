@@ -25,7 +25,7 @@ namespace Deadblock.Logic
             if (anEntity is Player aPlayer)
             {
                 aPlayer.Bag.DrinkWater();
-                aPlayer.SoundOrchestrator.PlaySoundInSequencer("player/env/drink-water");
+                aPlayer.SoundOrchestrator.PlaySoundInSequencer("player-env-drink-water");
             }
 
             base.InteractWith(anEntity);

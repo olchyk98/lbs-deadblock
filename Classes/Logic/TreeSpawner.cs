@@ -47,7 +47,7 @@ namespace Deadblock.Logic
             if (Chop() && anEntity is Player aPlayer)
             {
                 aPlayer.Bag.CollectTree();
-                aPlayer.SoundOrchestrator.PlaySoundInSequencer("player/env/chop-tree");
+                aPlayer.SoundOrchestrator.PlaySound("player-env-chop-tree");
             }
 
             base.InteractWith(anEntity);

@@ -149,8 +149,12 @@ namespace Deadblock.Logic
 
         override public bool AttackEntity(Entity aTarget)
         {
-            SoundOrchestrator.PlaySoundInSequencer("player/world/attack");
-            return base.AttackEntity(aTarget);
+            var couldAttack = base.AttackEntity(aTarget);
+
+            if (couldAttack)
+                SoundOrchestrator.PlaySound("player-world-attack");
+
+            return couldAttack;
         }
     }
 }
