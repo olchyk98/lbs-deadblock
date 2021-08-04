@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Deadblock.Tools
 {
-    public class AggregationUtils
+    public static class AggregationUtils
     {
         /// <summary>
         /// Handles complex conversion to different types.

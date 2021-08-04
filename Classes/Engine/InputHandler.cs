@@ -6,7 +6,7 @@ namespace Deadblock.Engine
 {
     public class InputSystem : DeliveredGameSlot
     {
-#region Buttons
+        #region Buttons
         public UniversalEvent<Keys> OnPressButton { get; } = new UniversalEvent<Keys>();
 
         public UniversalEvent OnMoveUp { get; } = new UniversalEvent();
@@ -16,13 +16,13 @@ namespace Deadblock.Engine
 
         public UniversalEvent OnRegularUse { get; } = new UniversalEvent();
         public UniversalEvent OnEscape { get; } = new UniversalEvent();
-#endregion
+        #endregion
 
         private Dictionary<Keys, UniversalEvent> myActiveKeys;
 
         public InputSystem(GameProcess aGame) : base(aGame)
         {
-            myActiveKeys = new Dictionary<Keys, UniversalEvent> () {
+            myActiveKeys = new Dictionary<Keys, UniversalEvent>() {
                 { Keys.S, OnMoveDown },
                 { Keys.D, OnMoveRight },
                 { Keys.W, OnMoveUp },
@@ -44,7 +44,7 @@ namespace Deadblock.Engine
 
             foreach ((var key, var caller) in myActiveKeys)
             {
-                if(!state.IsKeyDown(key)) continue;
+                if (!state.IsKeyDown(key)) continue;
 
                 caller.Invoke();
                 OnPressButton.Invoke(key);

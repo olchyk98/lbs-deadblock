@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework;
 
 namespace Deadblock.Tools
 {
-    public class EngineUtils
+    public static class EngineUtils
     {
+        private readonly static string ScoreLogFile = @"./scores.txt";
+
         /// <summary>
         /// Checks if there are any blocks
         /// with collider on the position,
@@ -69,6 +71,22 @@ namespace Deadblock.Tools
                 && aPosition1.Y < aPosition2.Y + someDimensions2.Y;
 
             return tempDoOverlapOnX && tempDoOverlapOnY;
+        }
+
+        /// <summary>
+        /// Saves score with current
+        /// timestamp to the log file.
+        /// </summary>
+        /// <param name="aScore">
+        /// Number of points that needs
+        /// to be written to the log file.
+        /// </param>
+        public static void ReportScore(int aScore)
+        {
+            long tempTime = NativeUtils.GetTime();
+
+            string tempPayload = $"{tempTime} -> score: {aScore}";
+            FileUtils.AppendToFile(tempPayload, ScoreLogFile);
         }
     }
 }

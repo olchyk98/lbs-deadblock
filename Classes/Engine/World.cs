@@ -9,7 +9,7 @@ using Deadblock.Sessions;
 
 namespace Deadblock.Engine
 {
-    public class World : DeliveredGameSlot
+    public class World : DeliveredGameSlot, IDisposable
     {
         public Player MainPlayer { get; private set; }
         public MonsterSpawner MonsterSpawner { get; private set; }
@@ -28,6 +28,7 @@ namespace Deadblock.Engine
             @"./Content/Levels/TheMain/ground.txt",
             @"./Content/Levels/TheMain/interactable.txt"
         };
+        private bool myIsDisposing;
 
         public World(GameProcess aGame) : base(aGame)
         {
@@ -277,6 +278,8 @@ namespace Deadblock.Engine
         /// </summary>
         public void Update()
         {
+            if (myIsDisposing) return;
+
             SpawnMonster();
             UpdateEntities();
         }
@@ -366,6 +369,20 @@ namespace Deadblock.Engine
             }
 
             return (tempNearestDistance <= aRange) ? tempMonster : null;
+        }
+
+        // Part of "Dispose Pattern" implementation
+        protected virtual void Dispose(bool isDisposing)
+        {
+            if (!isDisposing) return;
+            myIsDisposing = true;
+        }
+
+        // Part of "Dispose Pattern" implementation
+        public void Dispose()
+        {
+            Dispose(isDisposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
