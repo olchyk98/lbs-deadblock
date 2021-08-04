@@ -15,6 +15,8 @@ namespace Deadblock.Logic
         {
             mySpawnQuota = NativeUtils.RandomizeValue(10f, 20f);
             myPlantSprite = new SpriteBlock(gameInstance, "env/green-tree");
+
+            HasCollider = false;
         }
 
         override public void Render(Vector2 aPosition, bool isRelative = true)

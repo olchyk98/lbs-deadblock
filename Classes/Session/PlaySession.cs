@@ -70,8 +70,18 @@ namespace Deadblock.Sessions
 
         private void HandleGameFinished(GameEndScenario aScenario)
         {
-            Task.Run(async () => {
-                if(aScenario != GameEndScenario.IMMEDIATE_EXIT)
+            if (myActiveScenario != null) return;
+
+            // Report score to the engine.
+            EngineUtils.ReportScore(gameInstance.World.MainPlayer.Bag.Trees);
+
+            // Immediately stop all the ongoing
+            // processes in the game.
+            World.Dispose();
+
+            Task.Run(async () =>
+            {
+                if (aScenario != GameEndScenario.IMMEDIATE_EXIT)
                 {
                     myActiveScenario = aScenario;
 

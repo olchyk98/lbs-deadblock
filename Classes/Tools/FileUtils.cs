@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Deadblock.Tools
 {
-    public class FileUtils
+    public static class FileUtils
     {
         /// <summary>
         /// Reads contents of the specified files,
@@ -106,23 +106,23 @@ namespace Deadblock.Tools
             var tempLines = someConfigLines.ToList();
 
             tempLines.ForEach((line) =>
-            {
-                var pair = line.Split(":").Select(f => f.Trim()).ToList();
-                if (pair.Count != 2)
-                {
-                    throw new AggregateException($"Couldn't parse a config line. Invalid line: >>>> {line} <<<<. Contact DEV.");
-                }
+                    {
+                        var pair = line.Split(":").Select(f => f.Trim()).ToList();
+                        if (pair.Count != 2)
+                        {
+                            throw new AggregateException($"Couldn't parse a config line. Invalid line: >>>> {line} <<<<. Contact DEV.");
+                        }
 
-                var key = pair[0];
-                var value = pair[1];
+                        var key = pair[0];
+                        var value = pair[1];
 
-                if (tempConfig.ContainsKey(key))
-                {
-                    throw new AggregateException($"Detected key duplication in config. Key: {key}. Contact DEV");
-                }
+                        if (tempConfig.ContainsKey(key))
+                        {
+                            throw new AggregateException($"Detected key duplication in config. Key: {key}. Contact DEV");
+                        }
 
-                tempConfig[key] = value;
-            });
+                        tempConfig[key] = value;
+                    });
 
             return tempConfig;
         }
@@ -182,6 +182,24 @@ namespace Deadblock.Tools
 
             var tempConfigs = tempBlocks.Select(f => ParseConfig(f.ToArray()));
             return tempConfigs.ToArray();
+        }
+
+        /// <summary>
+        /// Appends specified contents
+        /// to the file.
+        /// The specified content will be placed
+        /// on a new line.
+        /// </summary>
+        /// <param name="aPayload">
+        /// Content that needs to
+        /// be appended.
+        /// </param>
+        /// <param name="aPath">
+        /// Path to the targeted file.
+        /// </param>
+        public static void AppendToFile(string aPayload, string aPath)
+        {
+            File.AppendAllText(aPath, $"\n{aPayload}");
         }
     }
 }
