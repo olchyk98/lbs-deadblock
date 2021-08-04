@@ -119,7 +119,7 @@ namespace Deadblock.Engine
 
             //////////////////
 
-            SoundOrchestrator.PlaySoundInSequencer("entity/ground/walk");
+            SoundOrchestrator.PlaySoundInSequencer("entity-ground-walk");
             return SetPosition(tempNextPosition);
         }
 
@@ -260,7 +260,7 @@ namespace Deadblock.Engine
                 return false;
 
             if (tempCurrentTime <= myLastAttackTime + AttackSpeed)
-                return true;
+                return false;
 
             // Execution
             aTarget.ApplyDamage(Strength);

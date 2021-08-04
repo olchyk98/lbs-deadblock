@@ -14,7 +14,7 @@ namespace Deadblock.Generic
         /// item in the Mono Content Pipeline.
         ///
         /// Recommended convention for keys is: { source/environment/action }
-        /// For example: { player/grass/walk }
+        /// For example: { player-grass-walk }
         /// </param>
         /// <returns>
         /// ID of the player that instantiated.
@@ -37,7 +37,7 @@ namespace Deadblock.Generic
         /// item in the Mono Content Pipeline.
         ///
         /// Recommended convention for keys is: { source/environment/action }
-        /// For example: { player/grass/walk }
+        /// For example: { player-grass-walk }
         /// </param>
         public void PlaySound(string aSoundKey);
 
