@@ -58,7 +58,6 @@ namespace Deadblock.Generic
         private Dictionary<string, SoundEffectInstance> myActivePlayers;
         // { key: sequentialPlayer  }
         private Dictionary<string, SequentialPlayer> myActiveSequentialPlayers;
-        private long lastTime = 0;
 
         public SoundOrchestrator(GameProcess aGame) : base(aGame)
         {

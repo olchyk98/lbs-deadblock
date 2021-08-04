@@ -17,7 +17,7 @@ namespace Deadblock.Logic
         public UniversalEvent OnAllTreesCollected;
 
         private readonly float WaterUsagePerTick = .0002f;
-        public readonly int MaxNumberOfTrees = 20;
+        public readonly int MaxNumberOfTrees = 50;
 
         public PlayerBag(GameProcess aGame) : base(aGame)
         {
