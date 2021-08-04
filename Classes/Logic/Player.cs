@@ -128,17 +128,19 @@ namespace Deadblock.Logic
 
             //////////////////////
 
-            gameInstance.InputSystem.OnMoveUp.Subscribe((bool isActive) => Move(new Vector2(0, -1)));
+            gameInstance.InputSystem.OnMoveUp.Subscribe(() => Move(new Vector2(0, -1)));
 
-            gameInstance.InputSystem.OnMoveRight.Subscribe((bool isActive) => Move(new Vector2(1, 0)));
+            gameInstance.InputSystem.OnMoveRight.Subscribe(() => Move(new Vector2(1, 0)));
 
-            gameInstance.InputSystem.OnMoveDown.Subscribe((bool isActive) => Move(new Vector2(0, 1)));
+            gameInstance.InputSystem.OnMoveDown.Subscribe(() => Move(new Vector2(0, 1)));
 
-            gameInstance.InputSystem.OnMoveLeft.Subscribe((bool isActive) => Move(new Vector2(-1, 0)));
+            gameInstance.InputSystem.OnMoveLeft.Subscribe(() => Move(new Vector2(-1, 0)));
+
+            gameInstance.InputSystem.OnEscape.Subscribe(() => OnFinish.Invoke(GameEndScenario.IMMEDIATE_EXIT));
 
             //////////////////////
 
-            gameInstance.InputSystem.OnRegularUse.Subscribe((bool isActive) => InteractWithWorld());
+            gameInstance.InputSystem.OnRegularUse.Subscribe(() => InteractWithWorld());
         }
 
         override public void Update()
