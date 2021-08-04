@@ -14,6 +14,7 @@ namespace Deadblock.Sessions
         PLAYER_LOST,
         PLAYER_LOST_NOHEALTH,
         PLAYER_LOST_NODRINK,
+        IMMEDIATE_EXIT,
     }
 
     public class PlaySession : DeliveredGameSlot, ISession
@@ -67,46 +68,36 @@ namespace Deadblock.Sessions
             gameInstance.SpriteBatch.DrawString(tempFont, tempStatus, tempPosition, Color.White);
         }
 
-        /// <summary>
-        /// Coroutine.
-        /// Responsible for
-        /// handling the timeout
-        /// between game ending and fade to menu.
-        /// </summary>
-        /// <param name="aScenario">
-        /// Targeted scenario.
-        /// </param>
-        private void FadeToMenuWithScenario(GameEndScenario aScenario)
-        {
-        }
-
         private void HandleGameFinished(GameEndScenario aScenario)
         {
-            myActiveScenario = aScenario;
+            if(aScenario != GameEndScenario.IMMEDIATE_EXIT)
+            {
+                myActiveScenario = aScenario;
 
-            // NOTE: Freezing thread is a bad
-            // practice, but since I (the main dev on this)
-            // don't have enough time for a non-production
-            // project, I'll leave like that.
-            // NOTE: In case of optimization, this
-            // solution needs to be destroyed. Everything
-            // should be implemented in a separate thread,
-            // with a reliable persistent events pipeline.
-            // NOTE: This approach is fine for now,
-            // as the game itself is stupid simple.
-            // It does not do anything in background,
-            // therefore it's acceptable to block
-            // the thread for 3s (!). In any production
-            // codebase, this kind of
-            // implementation would be a huge problem.
-            // NOTE: Moving this logic to a separate logic may
-            // produce some problems with SessionOrchestrator,
-            // as it disposes and instantiates objects on fly,
-            // when active session changes. Therefore,
-            // in case of thread implementation is the task,
-            // it's important to consider creating a
-            // Memsafe implementation.
-            Thread.Sleep(3000);
+                // NOTE: Freezing thread is a bad
+                // practice, but since I (the main dev on this)
+                // don't have enough time for a non-production
+                // project, I'll leave like that.
+                // NOTE: In case of optimization, this
+                // solution needs to be destroyed. Everything
+                // should be implemented in a separate thread,
+                // with a reliable persistent events pipeline.
+                // NOTE: This approach is fine for now,
+                // as the game itself is stupid simple.
+                // It does not do anything in background,
+                // therefore it's acceptable to block
+                // the thread for 3s (!). In any production
+                // codebase, this kind of
+                // implementation would be a huge problem.
+                // NOTE: Moving this logic to a separate logic may
+                // produce some problems with SessionOrchestrator,
+                // as it disposes and instantiates objects on fly,
+                // when active session changes. Therefore,
+                // in case of thread implementation is the task,
+                // it's important to consider creating a
+                // Memsafe implementation.
+                Thread.Sleep(3000);
+            }
 
             myActiveScenario = null;
 

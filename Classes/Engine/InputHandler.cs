@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Deadblock.Generic;
 using Microsoft.Xna.Framework.Input;
 
@@ -5,25 +6,30 @@ namespace Deadblock.Engine
 {
     public class InputSystem : DeliveredGameSlot
     {
-        public UniversalEvent<Keys> OnPressButton { get; }
+#region Buttons
+        public UniversalEvent<Keys> OnPressButton { get; } = new UniversalEvent<Keys>();
 
-        public UniversalEvent<bool> OnMoveUp { get; }
-        public UniversalEvent<bool> OnMoveRight { get; }
-        public UniversalEvent<bool> OnMoveLeft { get; }
-        public UniversalEvent<bool> OnMoveDown { get; }
+        public UniversalEvent OnMoveUp { get; } = new UniversalEvent();
+        public UniversalEvent OnMoveRight { get; } = new UniversalEvent();
+        public UniversalEvent OnMoveLeft { get; } = new UniversalEvent();
+        public UniversalEvent OnMoveDown { get; } = new UniversalEvent();
 
-        public UniversalEvent<bool> OnRegularUse { get; }
+        public UniversalEvent OnRegularUse { get; } = new UniversalEvent();
+        public UniversalEvent OnEscape { get; } = new UniversalEvent();
+#endregion
+
+        private Dictionary<Keys, UniversalEvent> myActiveKeys;
 
         public InputSystem(GameProcess aGame) : base(aGame)
         {
-            OnMoveDown = new UniversalEvent<bool>();
-            OnMoveUp = new UniversalEvent<bool>();
-            OnMoveRight = new UniversalEvent<bool>();
-            OnMoveLeft = new UniversalEvent<bool>();
-
-            OnPressButton = new UniversalEvent<Keys>();
-
-            OnRegularUse = new UniversalEvent<bool>();
+            myActiveKeys = new Dictionary<Keys, UniversalEvent> () {
+                { Keys.S, OnMoveDown },
+                { Keys.D, OnMoveRight },
+                { Keys.W, OnMoveUp },
+                { Keys.A, OnMoveLeft },
+                { Keys.E, OnRegularUse },
+                { Keys.Escape, OnEscape },
+            };
         }
 
         /// <summary>
@@ -36,34 +42,12 @@ namespace Deadblock.Engine
 
             //////////////////
 
-            foreach (var key in state.GetPressedKeys())
+            foreach ((var key, var caller) in myActiveKeys)
+            {
+                if(!state.IsKeyDown(key)) continue;
+
+                caller.Invoke();
                 OnPressButton.Invoke(key);
-
-            //////////////////
-
-            if (state.IsKeyDown(Keys.S))
-            {
-                OnMoveDown.Invoke(true);
-            }
-
-            if (state.IsKeyDown(Keys.D))
-            {
-                OnMoveRight.Invoke(true);
-            }
-
-            if (state.IsKeyDown(Keys.W))
-            {
-                OnMoveUp.Invoke(true);
-            }
-
-            if (state.IsKeyDown(Keys.A))
-            {
-                OnMoveLeft.Invoke(true);
-            }
-
-            if (state.IsKeyDown(Keys.E))
-            {
-                OnRegularUse.Invoke(true);
             }
         }
     }
