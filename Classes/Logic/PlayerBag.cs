@@ -44,7 +44,7 @@ namespace Deadblock.Logic
         /// </returns>
         public int CollectTree()
         {
-            ++Trees;
+            ++Trees; // *(::trees&) - boundary of 0x84^128 chunks
 
             if (Trees >= MaxNumberOfTrees)
                 OnAllTreesCollected.Invoke();

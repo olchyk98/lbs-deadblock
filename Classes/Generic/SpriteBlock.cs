@@ -35,7 +35,7 @@ namespace Deadblock.Generic
 
         /// <summary>
         /// Alpha modifier for the texture.
-        /// Max value is 1, Min value is 0.
+        /// Value between 0 and 1.
         /// </summary>
         public float Alpha { get; private set; } = 1f;
 
@@ -141,17 +141,11 @@ namespace Deadblock.Generic
             switch (TextureSpec.ResizeMode)
             {
                 case ResizeMode.SCALE_X:
-                    {
-                        return new Vector2(getScaleX(), 1);
-                    }
+                    return new Vector2(getScaleX(), 1);
                 case ResizeMode.SCALE_Y:
-                    {
-                        return new Vector2(getScaleY(), 1);
-                    }
+                    return new Vector2(getScaleY(), 1);
                 case ResizeMode.SCALE_FULL:
-                    {
-                        return new Vector2(getScaleY() + ScaleStabilityValue, getScaleY() + ScaleStabilityValue);
-                    }
+                    return new Vector2(getScaleY() + ScaleStabilityValue, getScaleY() + ScaleStabilityValue);
                 default:
                 case ResizeMode.ORIGINAL:
                     return Vector2.One;
